@@ -13,68 +13,91 @@ function formatPercent(value) {
   return `${Number(value).toFixed(1).replace(".0", "")}%`;
 }
 
-function makeBarChart(container, items, options) {
-  const { maxValue, valueKey = "count", valueFormatter, emphasizeLabel } = options;
+function visibleItems(items) {
+  return items.filter((item) => item.label !== "无法判断");
+}
+
+function appendChildren(parent, children) {
+  children.forEach((child) => parent.appendChild(child));
+  return parent;
+}
+
+function renderContentRibbonChart(data) {
+  const host = document.getElementById("content-type-chart");
+  const items = visibleItems(data.contentTypeStats);
+  const maxCount = Math.max(...items.map((item) => item.count));
   const chart = document.createElement("div");
-  chart.className = "bar-chart";
+  chart.className = "ribbon-chart";
 
-  items.forEach((item) => {
+  items.forEach((item, index) => {
     const row = document.createElement("div");
-    row.className = "bar-row";
+    row.className = "ribbon-row";
 
-    const head = document.createElement("div");
-    head.className = "bar-head";
-
-    const label = document.createElement("span");
-    label.className = "bar-label";
-    label.textContent = item.label;
-
-    const value = document.createElement("span");
-    value.className = "bar-value";
-    value.textContent = valueFormatter(item);
+    const rank = document.createElement("div");
+    rank.className = "ribbon-rank";
+    rank.textContent = `${index + 1}`;
 
     const track = document.createElement("div");
-    track.className = "bar-track";
+    track.className = "ribbon-track";
 
     const fill = document.createElement("div");
-    fill.className = "bar-fill";
-    if (emphasizeLabel && item.label === emphasizeLabel) {
-      fill.classList.add("is-emphasis");
-    }
-    fill.style.width = `${Math.max((item[valueKey] / maxValue) * 100, 4)}%`;
+    fill.className = "ribbon-fill";
+    fill.style.width = `${Math.max((item.count / maxCount) * 100, 32)}%`;
 
+    const label = document.createElement("span");
+    label.className = "ribbon-label";
+    label.textContent = item.label;
+
+    const meta = document.createElement("div");
+    meta.className = "ribbon-meta";
+    meta.textContent = `${item.count} · ${formatPercent(item.percent)}`;
+
+    fill.appendChild(label);
     track.appendChild(fill);
-    head.append(label, value);
-    row.append(head, track);
+    appendChildren(row, [rank, track, meta]);
     chart.appendChild(row);
   });
 
-  container.innerHTML = "";
-  container.appendChild(chart);
+  host.innerHTML = "";
+  host.appendChild(chart);
 }
 
-function renderStaticBarCharts(data) {
-  makeBarChart(document.getElementById("content-type-chart"), data.contentTypeStats, {
-    maxValue: Math.max(...data.contentTypeStats.map((item) => item.count)),
-    valueFormatter: (item) => `${item.count} · ${formatPercent(item.percent)}`
+function renderAuthorDotChart(data) {
+  const host = document.getElementById("author-type-chart");
+  const items = visibleItems(data.authorTypeStats);
+  const chart = document.createElement("div");
+  chart.className = "author-dot-chart";
+
+  items.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "author-row";
+    if (item.label === "医生/医院/专业机构") {
+      row.classList.add("is-doctor");
+    }
+
+    const label = document.createElement("div");
+    label.className = "author-label";
+    label.textContent = item.label;
+
+    const dots = document.createElement("div");
+    dots.className = "author-dots";
+
+    for (let index = 0; index < item.count; index += 1) {
+      const dot = document.createElement("span");
+      dot.className = "author-dot";
+      dots.appendChild(dot);
+    }
+
+    const meta = document.createElement("div");
+    meta.className = "author-meta";
+    meta.textContent = `${item.count} · ${formatPercent(item.percent)}`;
+
+    appendChildren(row, [label, dots, meta]);
+    chart.appendChild(row);
   });
 
-  makeBarChart(document.getElementById("author-type-chart"), data.authorTypeStats, {
-    maxValue: Math.max(...data.authorTypeStats.map((item) => item.count)),
-    valueFormatter: (item) => `${item.count} · ${formatPercent(item.percent)}`,
-    emphasizeLabel: "医生/医院/专业机构"
-  });
-
-  makeBarChart(document.getElementById("impact-chart"), data.impactStats, {
-    maxValue: Math.max(...data.impactStats.map((item) => item.count)),
-    valueFormatter: (item) => `${item.count} · ${formatPercent(item.percent)}`
-  });
-
-  makeBarChart(document.getElementById("boundary-chart"), data.boundaryCoverageStats, {
-    maxValue: 100,
-    valueKey: "percent",
-    valueFormatter: (item) => `${item.count} · ${formatPercent(item.percent)}`
-  });
+  host.innerHTML = "";
+  host.appendChild(chart);
 }
 
 function renderEngagementChart(data) {
@@ -88,19 +111,58 @@ function renderEngagementChart(data) {
   switches.className = "switches";
 
   const chartHost = document.createElement("div");
+
   const metrics = [
     { key: "likes", label: "点赞中位数" },
     { key: "favorites", label: "收藏中位数" },
     { key: "comments", label: "评论中位数" }
   ];
 
-  const renderMetric = (metricKey) => {
-    const sortedItems = [...data.engagementMedianStats].sort((a, b) => b[metricKey] - a[metricKey]);
-    makeBarChart(chartHost, sortedItems, {
-      maxValue: Math.max(...sortedItems.map((item) => item[metricKey])),
-      valueKey: metricKey,
-      valueFormatter: (item) => formatNumber(item[metricKey])
+  const animateLine = (segment, dot, position) => {
+    segment.style.width = "0%";
+    dot.style.left = "0%";
+    requestAnimationFrame(() => {
+      segment.style.width = `${position}%`;
+      dot.style.left = `${position}%`;
     });
+  };
+
+  const renderMetric = (metricKey) => {
+    const items = [...data.engagementMedianStats].sort((left, right) => right[metricKey] - left[metricKey]);
+    const maxValue = Math.max(...items.map((item) => item[metricKey]));
+    const chart = document.createElement("div");
+    chart.className = "line-ranking";
+
+    items.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "line-row";
+
+      const label = document.createElement("div");
+      label.className = "line-label";
+      label.textContent = item.label;
+
+      const track = document.createElement("div");
+      track.className = "line-track";
+
+      const segment = document.createElement("div");
+      segment.className = "line-segment";
+
+      const dot = document.createElement("div");
+      dot.className = "line-dot";
+
+      const value = document.createElement("div");
+      value.className = "line-value";
+      value.textContent = formatNumber(item[metricKey]);
+
+      const position = Math.max((item[metricKey] / maxValue) * 100, 6);
+      appendChildren(track, [segment, dot]);
+      appendChildren(row, [label, track, value]);
+      chart.appendChild(row);
+      animateLine(segment, dot, position);
+    });
+
+    chartHost.innerHTML = "";
+    chartHost.appendChild(chart);
 
     [...switches.querySelectorAll(".metric-toggle")].forEach((button) => {
       button.setAttribute("aria-pressed", String(button.dataset.metric === metricKey));
@@ -118,18 +180,110 @@ function renderEngagementChart(data) {
     switches.appendChild(button);
   });
 
-  wrapper.append(switches, chartHost);
+  appendChildren(wrapper, [switches, chartHost]);
   host.appendChild(wrapper);
   renderMetric("likes");
 }
 
+function renderImpactChart(data) {
+  const host = document.getElementById("impact-chart");
+  const maxCount = Math.max(...data.impactStats.map((item) => item.count));
+  const chart = document.createElement("div");
+  chart.className = "pillar-chart";
+
+  data.impactStats.forEach((item) => {
+    const block = document.createElement("div");
+    block.className = "pillar-item";
+
+    const value = document.createElement("div");
+    value.className = "pillar-value";
+    value.textContent = `${item.count} · ${formatPercent(item.percent)}`;
+
+    const track = document.createElement("div");
+    track.className = "pillar-track";
+
+    const fill = document.createElement("div");
+    fill.className = "pillar-fill";
+    fill.style.height = `${Math.max((item.count / maxCount) * 100, 24)}%`;
+
+    const label = document.createElement("div");
+    label.className = "pillar-label";
+    label.textContent = item.label;
+
+    track.appendChild(fill);
+    appendChildren(block, [value, track, label]);
+    chart.appendChild(block);
+  });
+
+  host.innerHTML = "";
+  host.appendChild(chart);
+}
+
+function renderBoundaryChart(data) {
+  const host = document.getElementById("boundary-chart");
+  const chart = document.createElement("div");
+  chart.className = "step-chart";
+
+  const explanations = {
+    "是否提到功能损害": "有没有明确说到这些表现已经影响了生活。",
+    "是否提到早发性": "有没有提醒问题通常从更早的时候就开始了。",
+    "是否提到持续性": "有没有说明这不是短暂的一阵子，而是长期存在。",
+    "是否提到跨情境性": "有没有指出困扰会跨学习、工作、关系等场景出现。",
+    "是否建议寻求专业评估/医院就诊": "有没有把判断交还给医院或专业评估。",
+    "是否提醒不要互联网诊断": "有没有明确划出网络内容不能代替诊断的边界。"
+  };
+
+  const labelMap = {
+    "是否提到功能损害": "提到功能损害",
+    "是否提到早发性": "提到早发性",
+    "是否提到持续性": "提到持续性",
+    "是否提到跨情境性": "提到跨情境性",
+    "是否建议寻求专业评估/医院就诊": "建议专业评估 / 医院就诊",
+    "是否提醒不要互联网诊断": "提醒不要互联网诊断"
+  };
+
+  const maxPercent = Math.max(...data.boundaryCoverageStats.map((item) => item.percent));
+  const grid = document.createElement("div");
+  grid.className = "step-chart-grid";
+
+  data.boundaryCoverageStats.forEach((item) => {
+    const card = document.createElement("article");
+    card.className = "step-card";
+    card.style.height = `${Math.max(110 + (item.percent / maxPercent) * 140, 150)}px`;
+
+    const stat = document.createElement("div");
+    stat.className = "step-stat";
+    stat.textContent = `${item.count} · ${formatPercent(item.percent)}`;
+
+    const label = document.createElement("div");
+    label.className = "step-label";
+    label.textContent = labelMap[item.label] || item.label;
+
+    const note = document.createElement("p");
+    note.className = "step-note";
+    note.textContent = explanations[item.label] || "";
+
+    appendChildren(card, [stat, label, note]);
+    grid.appendChild(card);
+  });
+
+  chart.appendChild(grid);
+  host.innerHTML = "";
+  host.appendChild(chart);
+}
+
 function renderMatrixChart(data) {
   const host = document.getElementById("matrix-chart");
-  host.innerHTML = "";
-
   const lookup = Object.fromEntries(
     data.matrixStats.map((item) => [`${item.resonance}-${item.boundary}`, item])
   );
+
+  const notes = {
+    "低共鸣-低边界": "内容不太会迅速让人代入，也少提供清楚的边界。",
+    "高共鸣-低边界": "最容易被迅速认领，却没有同步补足临床边界。",
+    "低共鸣-高边界": "共鸣感不强，但能把判断交还给专业评估。",
+    "高共鸣-高边界": "既能照见困扰，也会提醒读者不要直接自我诊断。"
+  };
 
   const wrapper = document.createElement("div");
   wrapper.className = "matrix-chart";
@@ -137,9 +291,6 @@ function renderMatrixChart(data) {
   const topLabels = document.createElement("div");
   topLabels.className = "matrix-top";
   topLabels.innerHTML = "<span></span><span>低共鸣</span><span>高共鸣</span>";
-
-  const gridWrap = document.createElement("div");
-  gridWrap.className = "matrix-grid-wrap";
 
   const side = document.createElement("div");
   side.className = "matrix-side";
@@ -160,64 +311,82 @@ function renderMatrixChart(data) {
     if (resonance === "高共鸣" && boundary === "低边界") {
       cell.classList.add("is-emphasis");
     }
-    cell.innerHTML = `
-      <div class="matrix-cell-title">${resonance} · ${boundary}</div>
-      <div class="matrix-count">${item.count}</div>
-      <div class="matrix-meta">${formatPercent(item.percent)}</div>
-    `;
+
+    const title = document.createElement("div");
+    title.className = "matrix-cell-title";
+    title.textContent = `${resonance} · ${boundary}`;
+
+    const count = document.createElement("div");
+    count.className = "matrix-count";
+    count.textContent = item.count;
+
+    const meta = document.createElement("div");
+    meta.className = "matrix-meta";
+    meta.textContent = formatPercent(item.percent);
+
+    const note = document.createElement("div");
+    note.className = "matrix-note";
+    note.textContent = notes[`${resonance}-${boundary}`];
+
+    appendChildren(cell, [title, count, meta, note]);
     grid.appendChild(cell);
   });
 
+  const gridWrap = document.createElement("div");
+  gridWrap.className = "matrix-grid-wrap";
+  appendChildren(gridWrap, [side, grid]);
+
   const caption = document.createElement("p");
   caption.className = "matrix-caption";
-  caption.textContent = "横向比较共鸣强度，纵向比较边界提醒。";
+  caption.textContent = "横向比较代入强度，纵向比较是否给出边界提醒。";
 
-  gridWrap.append(side, grid);
-  wrapper.append(topLabels, gridWrap, caption);
+  appendChildren(wrapper, [topLabels, gridWrap, caption]);
+  host.innerHTML = "";
   host.appendChild(wrapper);
 }
 
 function renderRiskChart(data) {
   const host = document.getElementById("risk-chart");
-  host.innerHTML = "";
-
-  const maxPercent = Math.max(...data.riskStats.map((item) => item.percent));
   const labelMap = {
-    "是否直接引导自我判断": "引导自我判断",
-    "是否将普遍体验直接等同于ADHD": "把普遍体验等同于 ADHD",
     "是否存在人格化/标签化/天赋化表达": "人格化 / 标签化 / 天赋化表达",
+    "是否直接引导自我判断": "直接引导自我判断",
+    "是否将普遍体验直接等同于ADHD": "把普遍体验直接等同于 ADHD",
     "是否存在商业导向": "商业导向"
   };
-  const chart = document.createElement("div");
-  chart.className = "vertical-chart";
 
-  data.riskStats.forEach((item) => {
+  const items = [...data.riskStats].sort((left, right) => right.percent - left.percent);
+  const maxPercent = Math.max(...items.map((item) => item.percent));
+  const chart = document.createElement("div");
+  chart.className = "risk-float-chart";
+
+  items.forEach((item) => {
     const block = document.createElement("div");
-    block.className = "vbar-item";
+    block.className = "risk-item";
 
     const value = document.createElement("div");
-    value.className = "vbar-value";
-    value.textContent = formatPercent(item.percent);
+    value.className = "risk-value";
+    value.textContent = `${item.count} · ${formatPercent(item.percent)}`;
 
-    const track = document.createElement("div");
-    track.className = "vbar-track";
+    const stage = document.createElement("div");
+    stage.className = "risk-stage";
 
-    const fill = document.createElement("div");
-    fill.className = "vbar-fill";
+    const bar = document.createElement("div");
+    bar.className = "risk-bar";
     if (item.label === "是否存在商业导向") {
-      fill.classList.add("is-soft");
+      bar.classList.add("is-soft");
     }
-    fill.style.height = `${Math.max((item.percent / maxPercent) * 100, 12)}%`;
+    bar.style.height = `${Math.max(42 + (item.percent / maxPercent) * 78, 52)}px`;
 
     const label = document.createElement("div");
-    label.className = "vbar-label";
+    label.className = "risk-label";
     label.textContent = labelMap[item.label] || item.label;
 
-    track.appendChild(fill);
-    block.append(value, track, label);
+    stage.appendChild(bar);
+    appendChildren(block, [value, stage, label]);
     chart.appendChild(block);
   });
 
+  host.innerHTML = "";
   host.appendChild(chart);
 }
 
@@ -227,8 +396,11 @@ function renderStoryCharts() {
     return;
   }
 
-  renderStaticBarCharts(data);
+  renderContentRibbonChart(data);
+  renderAuthorDotChart(data);
   renderEngagementChart(data);
+  renderImpactChart(data);
+  renderBoundaryChart(data);
   renderMatrixChart(data);
   renderRiskChart(data);
 }
@@ -236,17 +408,20 @@ function renderStoryCharts() {
 function observeFrame(frame) {
   try {
     const doc = frame.contentDocument || frame.contentWindow.document;
-    const target = doc.querySelector(".cards-container") || doc.body;
     const resize = () => {
-      const nextHeight = Math.max(target.scrollHeight, doc.body.scrollHeight) + 24;
-      frame.style.height = `${nextHeight}px`;
+      const bodyHeight = doc.body ? doc.body.scrollHeight : 0;
+      const rootHeight = doc.documentElement ? doc.documentElement.scrollHeight : 0;
+      frame.style.height = `${Math.max(bodyHeight, rootHeight) + 28}px`;
     };
 
     resize();
 
     if ("ResizeObserver" in window) {
       const observer = new ResizeObserver(() => resize());
-      observer.observe(target);
+      observer.observe(doc.body);
+      if (doc.documentElement) {
+        observer.observe(doc.documentElement);
+      }
       frame._observer = observer;
     } else {
       frame._poll = window.setInterval(resize, 500);

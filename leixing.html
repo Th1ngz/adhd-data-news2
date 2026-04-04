@@ -25,16 +25,17 @@
       font-family: 'SimHei', '黑体', '微软雅黑', sans-serif;
       color: #222;
       margin: 0; padding: 0;
-      min-height: 100vh;
+      min-height: auto;
     }
     .adhd-types {
       width: 100%;
-      min-height: 100vh;
+      min-height: 620px;
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 0 4vw;
+      align-items: flex-start;
+      padding: 18px 2vw 0;
       box-sizing: border-box;
+      gap: 14px;
     }
     .adhd-img-wrap {
       position: relative;
@@ -44,8 +45,8 @@
       justify-content: center;
       align-items: center;
       min-width: 260px;
-      min-height: 360px;
-      height: 80vh;
+      min-height: 320px;
+      height: 540px;
     }
     .adhd-img {
       width: 220px;
@@ -61,7 +62,7 @@
     .adhd-label {
       margin-top: 12px;
       padding: 6px 12px;
-      background-color: #deecff;
+      background-color: rgba(222,236,255,.76);
       border-radius: 12px;
       font-family: 'SimHei', '黑体', sans-serif;
       font-size: 1em;
@@ -109,13 +110,13 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        padding: 28px 0;
-        gap: 0;
+        padding: 20px 0 0;
+        gap: 10px;
       }
       .adhd-img-wrap {
-        margin-bottom: 24px;
-        height: 380px;
-        min-height: 280px;
+        margin-bottom: 8px;
+        height: 360px;
+        min-height: 260px;
         width: 100%;
       }
       .features-cloud { width: 300px; height: 300px; }

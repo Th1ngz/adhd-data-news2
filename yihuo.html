@@ -17,17 +17,17 @@
             min-height: auto;
             display: flex;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
+            align-items: flex-start;
+            padding: 0;
             color: #2c3e50;
         }
         
         .container {
-            max-width: 900px;
+            max-width: 1020px;
             width: 100%;
             background: transparent;
             border-radius: 0;
-            padding: 12px 8px 0;
+            padding: 10px 0 0;
             position: relative;
             box-shadow:none;   
         }
@@ -39,7 +39,7 @@
         .chart {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 24px;
             margin: 8px 0 0;
         }
         
@@ -53,6 +53,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 18px;
         }
         
         .keywords {
@@ -84,7 +85,7 @@
         }
         
         .bar-container {
-            height: 40px;
+            height: 42px;
             background: rgba(222, 236, 255, 0.62);
             border-radius: 20px;
             overflow: hidden;
@@ -158,11 +159,7 @@
         
         @media (max-width: 768px) {
             .container {
-                padding: 12px 0 0;
-            }
-            
-            h1 {
-                font-size: 1.8rem;
+                padding: 6px 0 0;
             }
             
             .topic-header {
