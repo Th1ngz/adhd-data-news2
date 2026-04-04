@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今天也没能完成待办</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #fefbf6;
+      color: #333;
+    }
+    header {
+      background-color: #ffcccb;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .task {
+      margin-bottom: 15px;
+      padding: 10px;
+      background: #e0f7fa;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .dialogue-box {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff8dc;
+      border: 1px solid #ccc;
+      padding: 20px;
+      z-index: 10;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    }
+    .dialogue-box.show {
+      display: block;
+    }
+    .dialogue-box button {
+      margin-top: 10px;
+      padding: 8px 12px;
+    }
+    #summary {
+      margin-top: 20px;
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 10px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>今天也没能完成待办</header>
+  <div class="container">
+    <div class="task" onclick="startTask('写报告')">📝 写报告</div>
+    <div class="task" onclick="startTask('回复微信')">📱 回复微信</div>
+    <div class="task" onclick="startTask('出门买菜')">🛒 出门买菜</div>
+    <div class="task" onclick="startTask('收拾书桌')">🧹 收拾书桌</div>
+    <div class="task" onclick="startTask('给爸妈打电话')">📞 给爸妈打电话</div>
+
+    <div id="summary">
+      <h3>📊 今日总结</h3>
+      <p id="resultText"></p>
+    </div>
+  </div>
+
+  <div id="dialogue" class="dialogue-box">
+    <p id="dialogueText"></p>
+    <button onclick="nextDialogue()">继续</button>
+  </div>
+
+  <script>
+    const taskDialogues = {
+      '写报告': [
+        '你打开文档准备写报告……',
+        '你突然想到咖啡没喝，走向厨房。',
+        '准备煮咖啡时发现水壶没洗，决定洗一下。',
+        '洗完壶你看到手机，点开刷了半小时淘宝……',
+        '你发现文档只写了标题。'
+      ],
+      '回复微信': [
+        '你点开朋友的微信……',
+        '跳出另一个群消息，顺手点进去回复。',
+        '然后刷起了朋友圈，看了20分钟猫视频。',
+        '你忘了原本要回复谁，退出了微信。'
+      ],
+      '出门买菜': [
+        '你准备出门，发现钥匙不见了。',
+        '你翻遍抽屉和沙发，焦虑加剧。',
+        '在厨房找到钥匙时，顺手吃了块饼干。',
+        '你开始收拾厨房，然后放弃出门。'
+      ],
+      '收拾书桌': [
+        '你准备整理桌面……',
+        '打开抽屉时翻出小学作文集。',
+        '你开始怀旧，翻看半小时。',
+        '结果桌子更乱了。'
+      ],
+      '给爸妈打电话': [
+        '你打开通讯录准备打电话……',
+        '看到多年未联系的朋友，点进去看了照片。',
+        '又想起大学生活，发呆10分钟。',
+        '你没打成电话，关了手机。'
+      ]
+    };
+
+    let currentTask = '';
+    let dialogueIndex = 0;
+    let completed = 0;
+
+    function startTask(task) {
+      currentTask = task;
+      dialogueIndex = 0;
+      showDialogue();
+    }
+
+    function showDialogue() {
+      document.getElementById('dialogueText').innerText = taskDialogues[currentTask][dialogueIndex];
+      document.getElementById('dialogue').classList.add('show');
+    }
+
+    function nextDialogue() {
+      dialogueIndex++;
+      if (dialogueIndex < taskDialogues[currentTask].length) {
+        showDialogue();
+      } else {
+        document.getElementById('dialogue').classList.remove('show');
+        completed++;
+        if (completed >= 5) {
+          showSummary();
+        }
+      }
+    }
+
+    function showSummary() {
+      document.getElementById('summary').style.display = 'block';
+      document.getElementById('resultText').innerText =
+        '你今天原计划完成 5 项任务，实际完成：0 项。\n自责感：★★★★★\n焦虑值：+3\n\n ADHD不是懒惰，而是注意力真的难以控制。';
+    }
+  </script>
+</body>
+</html>

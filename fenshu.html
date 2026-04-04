@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>成人ADHD自评</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  /* 全局基础 */
+  body {
+    font-family: '微软雅黑', '黑体', 'Heiti SC', 'SimHei', sans-serif;
+    background: transparent;
+    color: #222;           /* 主要文字色 */
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 700px;
+    margin: 12px auto 0;
+    background: transparent;
+    border-radius: 18px;
+    /* 去除阴影 */
+    box-shadow: none;
+    padding: 32px 20px 26px 20px;
+  }
+  h1 {
+    color: #222;
+    background: rgba(240, 218, 254, 0.8);
+    border-radius: 10px;
+    padding: 15px 0 11px 0;
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 2.5px;
+    /* 无 box-shadow */
+  }
+  .desc {
+    color: #222;
+    background: rgba(222, 236, 255, 0.68);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 1em;
+    margin-bottom: 34px;
+    line-height: 1.75;
+    border: 0;
+    box-shadow: none;
+  }
+  .start-btn {
+    display: block;
+    width: 60%;
+    margin: 32px auto 8px auto;
+    padding: 15px 0;
+    background: #deecff; /* 按钮背景淡紫/淡蓝 */
+    color: #222;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.22em;
+    font-weight: bold;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    transition: background 0.15s;
+  }
+  .start-btn:hover {
+    background: #f0dafe; /* hover 由 #e8d3ff 改为 #f0dafe */
+  }
+  .hidden {
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
+    transition: opacity 0.4s, max-height 0.5s;
+    overflow: hidden;
+  }
+  .fadein {
+    opacity: 1 !important;
+    max-height: 4000px !important;
+    transition: opacity 0.7s, max-height 1.1s;
+    overflow: visible;
+  }
+  .section-title {
+    font-size: 1.13em;
+    color: #35529b; /* 深一些的蓝色 */
+    font-weight: bold;
+    margin: 26px 0 7px 0;
+    border-left: 7px solid #deecff; /* 左侧高亮条用淡蓝 */
+    padding-left: 12px;
+    background: rgba(248, 250, 255, 0.72);
+    border-radius: 6px;
+    display: inline-block;
+  }
+  .question {
+    background: rgba(248, 250, 255, 0.72);
+    border-left: 5px solid #deecff; /* 由 #e8d3ff 改为 #f0dafe */
+    padding: 13px 10px 9px 15px;
+    margin: 0 0 11px 0;
+    border-radius: 7px;
+    /* 无 box-shadow */
+    transition: background 0.15s;
+  }
+  .question-title {
+    font-weight: bold;
+    margin-bottom: 7px;
+    color: #222;
+  }
+  .options label {
+    margin-right: 17px;
+    padding: 4px 9px;
+    border-radius: 4px;
+    background: #deecff; /* 由 #e8d3ff 改为 #f0dafe */
+    color: #222;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background 0.15s;
+  }
+  .options label:hover {
+    background: #c6cfff; /* hover 可稍变 */
+  }
+  .options input[type="radio"] {
+    margin-right: 2px;
+    accent-color: #deecff; /* 单选点颜色 */
+    vertical-align: middle;
+  }
+  .submit-btn {
+    display: block;
+    width: 100%;
+    padding: 13px;
+    background: #c6cfff;
+    color: #222;
+    border: none;
+    border-radius: 9px;
+    font-size: 1.18em;
+    font-weight: bold;
+    margin: 34px 0 10px 0;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 1.2px;
+    box-shadow: none;
+  }
+  .submit-btn:hover {
+    background: #f0dafe; /* hover 由 #e8d3ff 改为 #f0dafe */
+  }
+  .result {
+    padding: 20px 14px;
+    border-radius: 10px;
+    background: #deecff; /* 结果背景淡蓝 */
+    color: #222;
+    font-size: 1.11em;
+    margin-top: 20px;
+    border-left: 5px solid #c6cfff;
+    box-shadow: none;
+    word-break: break-all;
+  }
+  .score-table {
+    margin: 14px 0 10px 0;
+    background: rgba(245, 247, 250, 0.72);
+    border-radius: 7px;
+    padding: 13px 16px;
+    color: #222;
+    font-size: 1em;
+    box-shadow: none;
+  }
+  @media (max-width: 800px) {
+    .container {
+      padding: 8vw 2vw;
+    }
+    h1 {
+      font-size: 1.2em;
+    }
+    .start-btn {
+      width: 94%;
+    }
+  }
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <h1>成人ADHD自评量表（ASRS）</h1>
+    <div class="desc">
+      本工具基于世界卫生组织成人ADHD自填量表（ASRS），共18道题目。请根据你过去6个月的实际感受，选择每题的频率。完成后系统会自动计算分数，并根据评分标准给出参考建议。<br>
+      <b>所有信息匿名，不会被存储。</b>
+    </div>
+    <button class="start-btn" id="startBtn" onclick="showForm()">开始评测</button>
+    <form id="adhd-form" class="hidden">
+      <div class="section-title">A部分：注意力不集中（1~9题）</div>
+      <div id="questions-a"></div>
+      <div class="section-title">B部分：过动/冲动（10~18题）</div>
+      <div id="questions-b"></div>
+      <button type="button" class="submit-btn" onclick="calculateScore()">提交并查看结果</button>
+    </form>
+    <div id="result" class="result" style="display:none"></div>
+  </div>
+  <script>
+    const questionsA = [
+      "1. 当必须进行一件枯燥或困难的计划时，你会多常粗心犯错？",
+      "2. 当正在做枯燥或重复性的工作时，你多常有持续专注的困难？",
+      "3. 即使有人直接对你说话，你会多常有困难专注于别人跟你讲话的内容？",
+      "4. 一旦完成任何计划中最具挑战的部分之后，你多常有完成计划最后细节的困难？",
+      "5. 当必须从事需要有组织规划性的任务时，你会多常有困难井然有序地去做？",
+      "6. 当有一件需要多费心思考的工作时，你会多常逃避或是延后开始去做？",
+      "7. 在家里或是在工作时，你会多常没有把东西放对地方或是找不到东西？",
+      "8. 你会多常因身旁的活动或声音而分心？",
+      "9. 你会多常有问题去记得约会或是必须要做的事？"
+    ];
+    const questionsB = [
+      "10. 当你必须长时间坐着时，你会多常坐不安稳或扭动手脚？",
+      "11. 你会多常在开会时或在其他被期待坐好的场合中离开座位？",
+      "12. 你会多常觉得静不下来或烦躁不安？",
+      "13. 当有自己独处的时间时，你会多常觉得有困难使自己平静和放松？",
+      "14. 你会多常像被马达所驱动一样，觉得自己过度地活跃，不得不做事情？",
+      "15. 在社交场合中，你会多常发现自己话讲得太多？",
+      "16. 当与他人交谈时，你会多常在别人还没把话讲完前就插嘴或接话替对方把话讲完？",
+      "17. 在需要轮流排队的场合时，你会多常有困难轮流等待？",
+      "18. 你会多常在别人忙碌时打断别人？"
+    ];
+    const options = [
+      { label: "从不", value: 0 },
+      { label: "很少", value: 1 },
+      { label: "有时", value: 2 },
+      { label: "常常", value: 3 },
+      { label: "非常频繁", value: 4 }
+    ];
+
+    function renderQuestions(containerId, questions, prefix) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      questions.forEach((q, i) => {
+        const qIdx = prefix + (i + 1);
+        let html = `<div class="question"><div class="question-title">${q}</div><div class="options">`;
+        options.forEach(opt => {
+          html += `<label><input type="radio" name="${qIdx}" value="${opt.value}">${opt.label}</label>`;
+        });
+        html += "</div></div>";
+        container.innerHTML += html;
+      });
+    }
+    renderQuestions('questions-a', questionsA, 'A');
+    renderQuestions('questions-b', questionsB, 'B');
+
+    function showForm() {
+      document.getElementById('startBtn').style.display = "none";
+      const form = document.getElementById('adhd-form');
+      form.classList.remove('hidden');
+      setTimeout(() => form.classList.add('fadein'), 30);
+    }
+
+function calculateScore () {
+  let aScore = 0, bScore = 0;
+  // 统计 A 部分（1-9题）
+  for (let i = 1; i <= 9; i++) {
+    const v = document.querySelector(`input[name="A${i}"]:checked`);
+    if (!v) {
+      alert("请完成所有题目再提交！");
+      return;
+    }
+    aScore += +v.value;
+  }
+  // 统计 B 部分（10-18题，对应 B1-B9）
+  for (let i = 1; i <= 9; i++) {
+    const v = document.querySelector(`input[name="B${i}"]:checked`);
+    if (!v) {
+      alert("请完成所有题目再提交！");
+      return;
+    }
+    bScore += +v.value;
+  }
+  const total = aScore + bScore;
+
+  // 根据分数返回等级：不太可能 / 很可能 / 非常可能
+  function getLevel(score) {
+    if (score <= 16) return "不太可能";
+    if (score <= 23) return "很可能";
+    return "非常可能";
+  }
+  const levelA = getLevel(aScore);
+  const levelB = getLevel(bScore);
+  const levelT = getLevel(total);
+
+  // 综合取最高关注级别：非常可能 > 很可能 > 不太可能
+  const levels = [levelA, levelB, levelT];
+  let finalLevel;
+  if (levels.includes("非常可能")) {
+    finalLevel = "非常可能";
+  } else if (levels.includes("很可能")) {
+    finalLevel = "很可能";
+  } else {
+    finalLevel = "不太可能";
+  }
+
+  // 生成评语，保持冷静、支持、鼓励关注
+  let msg = `<div>您的评分结果：<br>
+             A 部分：${aScore} / 36 （${levelA}）<br>
+             B 部分：${bScore} / 36 （${levelB}）<br>
+             总分：${total} / 72 （${levelT}）</div><br>`;
+
+  // 根据最终级别附加建议
+  if (finalLevel === "不太可能") {
+    msg += `<div>综合来看，目前量表得分处于较低区间，ADHD 特征不明显。`
+         + `若在日常生活或工作中偶有注意力波动、组织困难等感受，可继续关注自身体验，`
+         + `尝试调整生活方式或行为策略；若长期感到困扰，也可根据需要与专业人士沟通交流。</div>`;
+  } else if (finalLevel === "很可能") {
+    msg += `<div>综合来看，量表得分处于中等区间，存在一定与 ADHD 特征相关的表现。`
+         + `您可以在日常中留意这些特征对生活、学习或工作带来的影响，`
+         + `并酌情考虑与专业人士沟通，获取更详细评估或建议；`
+         + `同时，通过合理的自我管理策略、环境调整等方式进行尝试，也有助于改善体验。</div>`;
+  } else { // “非常可能”
+    msg += `<div>综合来看，量表得分处于较高区间，可能存在明显的 ADHD 特征。`
+         + `建议您考虑积极寻求专业评估与支持，`
+         + `与医生或心理专家沟通，以了解更全面的状况并获得个性化建议或干预方案。`
+         + `同时，也可尝试结合生活习惯、工作/学习环境调整等方式，帮助提升注意力和执行功能。</div>`;
+  }
+
+  // 温馨提示
+  msg += `<br><div style="font-style:italic;color:#555;">`
+       + `* 该量表仅供自我参考，不作最终诊断；若您或他人对结果有疑虑，请以专业评估为准。`
+       + `</div>`;
+
+  const resultBox = document.getElementById("result");
+  resultBox.innerHTML = msg;
+  resultBox.style.display = "block";
+  // 滚动到结果区域
+  window.scrollTo({ top: resultBox.offsetTop - 30, behavior: "smooth" });
+}
+  </script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成人ADHD诊疗流程图</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: transparent;
+            min-height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 12px 8px 0;
+            color: #2c3e50;
+        }
+        
+        .flow-container {
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .flow-title {
+            display:none;
+        }
+        
+        .flow-steps {
+            display: flex;
+            gap: 15px;
+            position: relative;
+        }
+        
+        .flow-steps::before {
+            content: "";
+            position: absolute;
+            top: 35px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #c6cfff;
+            z-index: 0;
+        }
+        
+        .step {
+            flex: 1;
+            background: rgba(255,255,255,.46);
+            border-radius: 12px;
+            box-shadow: none;
+            z-index: 1;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.28);
+        }
+        
+        .step-header {
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .step-content {
+            padding: 15px;
+            border-top: 1px solid rgba(117,137,170,.1);
+        }
+        
+        .step-item {
+            padding: 8px 0;
+            font-size: 0.9rem;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .step-item::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #6a5acd;
+            font-weight: bold;
+        }
+        
+        .step-item-details {
+            font-size: 0.8rem;
+            color: #5a6d80;
+            padding-left: 5px;
+            margin-top: 3px;
+        }
+        
+        .connector {
+            position: absolute;
+            top: 35px;
+            height: 2px;
+            background: #6a5acd;
+        }
+        
+        .connector::after {
+            content: "→";
+            position: absolute;
+            right: -12px;
+            top: -8px;
+            color: #6a5acd;
+            font-size: 1.2rem;
+        }
+        
+        .flow-notes {
+            text-align: center;
+            margin-top: 22px;
+            padding: 15px;
+            font-size: 0.9rem;
+            color: #5a6d80;
+        }
+        
+        /* 步骤颜色 */
+        .step-1 .step-header { background: #e8d3ff; }
+        .step-2 .step-header { background: #c6cfff; }
+        .step-3 .step-header { background: #deecff; }
+        .step-4 .step-header { background: #b0d0ff; }
+        .step-5 .step-header { background: #9ac5ff; }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .flow-steps {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .flow-steps::before {
+                display: none;
+            }
+            
+            .connector {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flow-container">
+        
+        <div class="flow-steps">
+            <!-- 步骤1：病史采集 -->
+            <div class="step step-1">
+                <div class="step-header">病史采集</div>
+                <div class="step-content">
+                    <div class="step-item">儿童/成年期</div>
+                    <div class="step-item">症状确定(ADHD/共病)</div>
+                    <div class="step-item">病程确定</div>
+                    <div class="step-item">功能损害
+                        <div class="step-item-details">学习、个人生活、家庭、职业功能</div>
+                    </div>
+                    <div class="step-item">个人史/既往史/家族史</div>
+                </div>
+            </div>
+            
+            <!-- 步骤2：心理测评 -->
+            <div class="step step-2">
+                <div class="step-header">心理测评</div>
+                <div class="step-content">
+                    <div class="step-item">ADHD症状评定量表</div>
+                    <div class="step-item">执行功能评估</div>
+                    <div class="step-item">常见共病症状评估</div>
+                </div>
+            </div>
+            
+            <!-- 步骤3：常规与辅助检查 -->
+            <div class="step step-3">
+                <div class="step-header">常规与辅助检查</div>
+                <div class="step-content">
+                    <div class="step-item">体格检查</div>
+                    <div class="step-item">实验室检查</div>
+                    <div class="step-item">脑电图和神经影像
+                        <div class="step-item-details">(必要时)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 步骤4：诊断 -->
+            <div class="step step-4">
+                <div class="step-header">诊断</div>
+                <div class="step-content">
+                    <div class="step-item">ICD-11诊断标准</div>
+                    <div class="step-item">鉴别诊断</div>
+                    <div class="step-item">ADHD分类诊断</div>
+                    <div class="step-item">共病诊断</div>
+                    <div class="step-item">诊断性访谈工具
+                        <div class="step-item-details">(必要时)</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 步骤5：综合治疗和随访监测 -->
+            <div class="step step-5">
+                <div class="step-header">综合治疗和随访监测</div>
+                <div class="step-content">
+                    <div class="step-item">药物治疗</div>
+                    <div class="step-item">非药物治疗</div>
+                    <div class="step-item">随访和监测</div>
+                    <div class="step-item">转诊
+                        <div class="step-item-details">(必要时)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="flow-notes">
+            <p>注：ADHD为注意缺陷多动障碍; ICD-11为国际疾病分类第11版</p>
+        </div>
+    </div>
+</body>
+</html>

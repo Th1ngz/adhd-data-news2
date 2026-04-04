@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>成人ADHD可诊断医院分布地图</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: transparent;
+    }
+    #map {
+      width: 100%;
+      height: 76vh;
+      min-height: 520px;
+    }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <!-- 引入 ECharts -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/echarts/map/js/china.js"></script>
+  <script>
+    // 初始化 ECharts 实例
+    var chart = echarts.init(document.getElementById('map'), null, {
+      backgroundColor: '#f3f8ff'
+    });
+
+    // 各省地理坐标 + 医院数据
+    var data = [
+      { name: '北京市', value: [116.4074, 39.9042, 5], hospitals: [
+          '北京大学第六医院',
+          '北京大学人民医院',
+          '北京回龙观医院',
+          '北京安定医院',
+          '北京积水潭医院'
+      ]},
+      { name: '上海市', value: [121.4737, 31.2304, 5], hospitals: [
+          '上海新华医院',
+          '上海市第一人民医院松江南院',
+          '上海第一人民医院虹口院区',
+          '上海同济大学附属医院 - ADHD门诊',
+          '上海市宝山区精神卫生中心'
+      ]},
+      { name: '云南省', value: [102.7123, 25.0406, 1], hospitals: [
+          '昆明医学院附属第一医院(云大医院)'
+      ]},
+      { name: '内蒙古自治区', value: [111.6874, 40.8183, 1], hospitals: [
+          '内蒙古自治区第三医院儿少心理医学中心'
+      ]},
+      { name: '吉林省', value: [125.3245, 43.8868, 1], hospitals: [
+          '吉林大学白求恩第一医院'
+      ]},
+      { name: '四川省', value: [104.0668, 30.5723, 4], hospitals: [
+          '四川大学华西医院',
+          '成都四医院',
+          '成都军区机关医院',
+          '成都市四医院九江院区（成都市心理健康中心）'
+      ]},
+      { name: '天津市', value: [117.2000, 39.1333, 1], hospitals: [
+          '天津市安定医院'
+      ]},
+      { name: '安徽省', value: [117.2272, 31.8206, 2], hospitals: [
+          '安医大二附院',
+          '合肥市第四人民医院'
+      ]},
+      { name: '山东省', value: [117.0000, 36.6671, 10], hospitals: [
+          '山东省精神卫生中心',
+          '山东省立医院',
+          '山东省济宁医学院附属医院',
+          '青岛精神卫生中心（青岛市第七人民医院）',
+          '青岛市立医院',
+          '青岛妇女儿童医院',
+          '山东潍坊市人民医院',
+          '威海市立医院',
+          '山东泰安解放军八十八医院',
+          '千佛山医院'
+      ]},
+      { name: '山西省', value: [112.5509, 37.8903, 1], hospitals: [
+          '山西医科大学第一医院'
+      ]},
+      { name: '广东省', value: [113.2644, 23.1291, 21], hospitals: [
+          '广州医科大学附属脑科医院（广州市惠爱医院）',
+          '深圳市康宁医院',
+          '广东省人民医院',
+          '广州暨南大学附属第一医院精神心理科',
+          '广州妇幼保健院（广州市妇女儿童医疗中心）',
+          '中山大学附属第三医院',
+          '广州医学院第二附属医院心理科',
+          '汕头大学精神卫生中心',
+          '江门市妇幼保健院',
+          '中山市博爱医院（妇幼保健院）',
+          '中山市小榄人民医院',
+          '中山市第三人民医院',
+          '珠海市妇幼保健院',
+          '何贤纪念医院（广东省广州市番禺区）',
+          '广东医科大学顺德妇女儿童医院（佛山市顺德区妇幼保健院）',
+          '佛山市第一人民医院',
+          '佛山市妇幼保健院',
+          '佛山市第三人民医院',
+          '南方医科大学顺德医院',
+          '江门市第四人民医院',
+          '肇庆市第三人民医院'
+      ]},
+      { name: '广西壮族自治区', value: [108.3201, 22.8240, 2], hospitals: [
+          '广西壮族自治区人民医院（桃源院区）',
+          '广西医科大学第一附属医院'
+      ]},
+      { name: '宁夏回族自治区', value: [106.2309, 38.4872, 1], hospitals: [
+          '宁夏回族自治区宁安医院'
+      ]},
+      { name: '新疆维吾尔自治区', value: [87.6177, 43.7928, 2], hospitals: [
+          '新疆人民医院',
+          '新疆医科大学第一附属医院'
+      ]},
+      { name: '江苏省', value: [118.7969, 32.0603, 3], hospitals: [
+          '南京脑科儿童心理卫生中心',
+          '扬州五台山医院',
+          '江苏平江医院'
+      ]},
+      { name: '江西省', value: [115.8582, 28.6829, 1], hospitals: [
+          '江西省妇幼保健院九龙湖院区'
+      ]},
+      { name: '河北省', value: [114.5025, 38.0455, 4], hospitals: [
+          '河北省儿童医院心理行为科',
+          '石家庄市第八医院精八科',
+          '河北医科大学第一医院',
+          '河北省第六人民医院'
+      ]},
+      { name: '河南省', value: [113.6486, 34.7570, 2], hospitals: [
+          '河南省妇幼保健院（郑大三附院）心理门诊',
+          '郑州大学第一附属医院'
+      ]},
+      { name: '浙江省', value: [120.1551, 30.2741, 9], hospitals: [
+          '浙江大学医学院附属第一医院（余杭院区）（庆春院区）',
+          '杭州市第七人民医院',
+          '宁波市康宁医院',
+          '浙江大学邵逸夫医院',
+          '浙江金华妇幼保健院',
+          '温州医科大学附属康宁医院',
+          '江山市第四人民医院',
+          '浙江大学医学院附属第二医院',
+          '温州市第七人民医院'
+      ]},
+      { name: '海南省', value: [110.3312, 20.0310, 2], hospitals: [
+          '海南省人民医院',
+          '海南省安宁医院'
+      ]},
+      { name: '湖北省', value: [114.3055, 30.5928, 2], hospitals: [
+          '武汉市精神卫生中心（二七院区）',
+          '湖北宜昌市二医院（学习困难门诊）'
+      ]},
+      { name: '湖南省', value: [112.9823, 28.1941, 1], hospitals: [
+          '中南大学湘雅二医院'
+      ]},
+      { name: '福建省', value: [119.2965, 26.0745, 1], hospitals: [
+          '厦门仙岳医院'
+      ]},
+      { name: '贵州省', value: [106.7135, 26.5783, 1], hospitals: [
+          '贵州省第二人民医院'
+      ]},
+      { name: '辽宁省', value: [123.4315, 41.8057, 4], hospitals: [
+          '辽宁省肿瘤医院',
+          '中国医科大学沈阳盛京医院（滑翔院区）',
+          '中国医科大学附属鞍山医院',
+          '大连市第七人民医院'
+      ]},
+      { name: '重庆市', value: [106.5516, 29.5630, 1], hospitals: [
+          '重庆市精神卫生中心'
+      ]},
+      { name: '陕西省', value: [108.9480, 34.2632, 3], hospitals: [
+          '西安交大第二附属医院',
+          '西安交大第一附属医院',
+          '高新医院'
+      ]},
+      { name: '香港特别行政区', value: [114.1095, 22.3964, 3], hospitals: [
+          '中建医务（中建醫務）',
+          '思健医务中心',
+          'Optimind Clinic'
+      ]},
+      { name: '澳门特别行政区', value: [113.5439, 22.1860, 1], hospitals: [
+          '澳门镜湖医院（澳門鏡湖醫院）'
+      ]}
+    ];
+
+    var bigData   = data.filter(d => d.value[2] > 8);
+   var smallData = data.filter(d => d.value[2] <= 8);
+
+    // ECharts 配置
+ var option = {
+      tooltip: {
+        trigger: 'item',
+        formatter: function(params) {
+          if (!params.data) return '';
+          // params.data.value: [lng, lat, count]; params.data.hospitals: 数组
+          var cnt = params.data.value[2];
+          var str = params.data.name + '：' + cnt + ' 所<br>';
+          // 如果 hospitals 存在且为数组，展示列表
+          if (params.data.hospitals && params.data.hospitals.length) {
+            str += params.data.hospitals.join('<br>');
+          }
+          return str;
+        },
+        backgroundColor: '#fff',
+        borderColor: '#ccc',
+        textStyle: { color: '#000' }
+      },
+      geo: {
+        map: 'china',
+        roam: true,
+        label: { show: false },
+        itemStyle: {
+          normal: {
+            areaColor: '#deecff',
+            borderColor: '#fff'
+          },
+          emphasis: {
+            areaColor: '#c2e0fc'
+          }
+        }
+      },
+      series: [
+        {
+          name: '大点',
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          data: bigData,
+          symbolSize: function(val) {
+            // val: [lng, lat, count]
+            return Math.max(16, val[2] * 5);
+          },
+          itemStyle: { color: 'rgba(232,211,255,1)' },
+          zlevel: 2
+        },
+        {
+          name: '小点',
+          type: 'scatter',
+          coordinateSystem: 'geo',
+          data: smallData,
+          symbolSize: function(val) {
+            return Math.max(16, val[2] * 5);
+          },
+          itemStyle: { color: 'rgba(232,211,255,1)' },
+          zlevel: 1
+        }
+      ],
+      graphic: []
+    };
+
+    // 渲染图表
+    chart.setOption(option);
+  </script>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>ADHD类型视觉介绍</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: '黑体', 'SimHei', 'Heiti SC', sans-serif;
+      font-size: 18px;           /* 全站默认字号：16→18，可再调 */
+      line-height: 1.6;          /* 建议同步调高行距 */
+    }
+
+    /* 如果需要更大的标题，可单独加：*/
+    h2, .adhd-label {
+      font-size: 1.4em;          /* 1.4 × 18px ≈ 25px */
+    }
+
+    /* 气泡文字、特征标签一起放大 */
+    .feature-tip {
+      font-size: 1.05em;         /* 原 0.9 → 1.05，更易读 */
+    }
+    body {
+      background: transparent;
+      font-family: 'SimHei', '黑体', '微软雅黑', sans-serif;
+      color: #222;
+      margin: 0; padding: 0;
+      min-height: 100vh;
+    }
+    .adhd-types {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4vw;
+      box-sizing: border-box;
+    }
+    .adhd-img-wrap {
+      position: relative;
+      flex: 1 1 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-width: 260px;
+      min-height: 360px;
+      height: 80vh;
+    }
+    .adhd-img {
+      width: 220px;
+      max-width: 30vw;
+      height: auto;
+      display: block;
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      z-index: 2;
+      pointer-events: auto;
+    }
+    .adhd-label {
+      margin-top: 12px;
+      padding: 6px 12px;
+      background-color: #deecff;
+      border-radius: 12px;
+      font-family: 'SimHei', '黑体', sans-serif;
+      font-size: 1em;
+      color: #222;
+    }
+    .features-cloud {
+      pointer-events: none;
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 400px;
+      height: 400px;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .adhd-img-wrap.active .features-cloud {
+      opacity: 1;
+    }
+    .feature-tip {
+      position: absolute;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+      color: #444;
+      font-size: 0.9em;
+      padding: 0;
+      white-space: nowrap;
+      font-weight: 500;
+      text-shadow: 0 0 4px rgba(243,248,255,0.8);
+      transition: transform 0.25s;
+      pointer-events: none;
+    }
+    .feature-tip.p1 { left: 50%;  top: -5%;   transform: translate(-50%, 0); }
+    .feature-tip.p2 { right: -18%; top: 18%;   transform: translate(0, -50%); }
+    .feature-tip.p3 { right: -25%;top: 50%;   transform: translate(0, -50%); }
+    .feature-tip.p4 { right: -25%; top: 82%;   transform: translate(0, -50%); }
+    .feature-tip.p5 { left: 50%;  bottom: -5%;transform: translate(-50%, 0); }
+    .feature-tip.p6 { left: -18%;  top: 82%;   transform: translate(0, -50%); }
+    .feature-tip.p7 { left: -15%; top: 50%;   transform: translate(0, -50%); }
+    .feature-tip.p8 { left: -25%;  top: 18%;   transform: translate(0, -50%); }
+    @media (max-width: 900px) {
+      .adhd-types {
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 28px 0;
+        gap: 0;
+      }
+      .adhd-img-wrap {
+        margin-bottom: 24px;
+        height: 380px;
+        min-height: 280px;
+        width: 100%;
+      }
+      .features-cloud { width: 300px; height: 300px; }
+      .feature-tip { font-size: 1em; }
+      .feature-tip.p1 { top: -8%; }
+      .feature-tip.p2 { right: -6%; top: 20%; }
+      .feature-tip.p4 { right: -6%; top: 80%; }
+      .feature-tip.p6 { left: -6%; top: 80%; }
+      .feature-tip.p8 { left: -6%; top: 20%; }
+      .adhd-img { max-width: 60vw; width: 160px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="adhd-types">
+    <!-- 注意力不足型-大雄 -->
+    <div class="adhd-img-wrap" id="nobita-wrap"
+         onmouseenter="toggleFeatures('nobita', true)"
+         onmouseleave="toggleFeatures('nobita', false)">
+      <img src="nobita.png" alt="ADHD注意力不足型" class="adhd-img">
+      <div class="features-cloud" id="features-nobita">
+        <div class="feature-tip p1">很难注意事情的细节</div>
+        <div class="feature-tip p2">不容易专注在一件事情上</div>
+        <div class="feature-tip p3">不容易针对事物或活动规划组织</div>
+        <div class="feature-tip p4">会遗忘一些需要的物品</div>
+        <div class="feature-tip p5">在日常活动中比较健忘</div>
+        <div class="feature-tip p6">注意力持续短，易分心</div>
+        <div class="feature-tip p7">不易处理结构性作业</div>
+        <div class="feature-tip p8">难以完成繁琐或需耐心的任务</div>
+      </div>
+      <div class="adhd-label">注意力不足为主型</div>
+    </div>
+    <!-- 过动型-胖虎 -->
+    <div class="adhd-img-wrap" id="fatty-wrap"
+         onmouseenter="toggleFeatures('fatty', true)"
+         onmouseleave="toggleFeatures('fatty', false)">
+      <img src="fatty.png" alt="ADHD过动型" class="adhd-img">
+      <div class="features-cloud" id="features-fatty">
+        <div class="feature-tip p1">没办法好好坐着</div>
+        <div class="feature-tip p2">在座位上坐立不安、动来动去</div>
+        <div class="feature-tip p3">会在不适当的时间点离开座位</div>
+        <div class="feature-tip p4">从事具风险性的事，不考虑后果</div>
+        <div class="feature-tip p5">时常活跃、精力充沛停不下来</div>
+        <div class="feature-tip p6">说话频率和时间比其他人多</div>
+        <div class="feature-tip p7">问题未说完就抢着说答案</div>
+        <div class="feature-tip p8">不易轮流等候，常常插嘴或打断别人</div>
+      </div>
+      <div class="adhd-label">过动为主型</div>
+    </div>
+  </div>
+  <script>
+    function toggleFeatures(type, show) {
+      document.getElementById(type+'-wrap').classList.toggle('active', show);
+    }
+  </script>
+</body>
+</html>

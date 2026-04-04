@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>ADHD疑问词频词云</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+    }
+    #wordcloud {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="wordcloud"></div>
+
+  <!-- 引入 ECharts 核心库 -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+  <!-- 引入 ECharts WordCloud 扩展 -->
+  <script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud/dist/echarts-wordcloud.min.js"></script>
+  <script>
+    // 1. 初始化
+    var chart = echarts.init(document.getElementById('wordcloud'), null, {
+      backgroundColor: 'transparent'
+    });
+
+    // 2. 词频数据（从 cipin.csv 中导出为 array）
+    var data = [
+      {name: '注意力缺陷', value: 23},
+      {name: '启动困难', value: 19},
+      {name: '医院确诊', value: 16},
+      {name: '控制不住', value: 15},
+      {name: '时间管理', value: 15},
+      {name: '焦虑抑郁', value: 14},
+      {name: '诊断标准', value: 14},
+      {name: '工作学习', value: 13},
+      {name: '三分钟热度', value: 13},
+      {name: '缺陷多动', value: 11},
+      {name: '药物治疗', value: 11},
+      {name: '几个小时', value: 11},
+      {name: '注意力涣散', value: 10},
+      {name: '成绩不错', value: 10},
+      {name: '影响生活', value: 10},
+      {name: '社交障碍', value: 9},
+      {name: '15分钟', value: 9},
+      {name: '抑郁焦虑', value: 9},
+      {name: '考上大学', value: 8},
+      {name: '正向反馈', value: 8},
+      {name: '医生诊断', value: 8},
+      {name: '注意力分散', value: 8},
+      {name: '养成习惯', value: 8},
+      {name: '负面情绪', value: 8},
+      {name: '小学初中', value: 8},
+      {name: 'goodman博士', value: 8},
+      {name: 'davidgoodman', value: 8},
+      {name: 'amyarnsten', value: 7},
+      {name: '两个小时', value: 7},
+      {name: '多动症患者', value: 7},
+      {name: 'arnsten博士', value: 7},
+      {name: '晚上睡不着', value: 7},
+      {name: '社会功能', value: 7},
+      {name: '一遍一遍', value: 7},
+      {name: '情绪波动', value: 7},
+      {name: '大部分时间', value: 7},
+      {name: '高中成绩', value: 7},
+      {name: '工作时间', value: 6},
+      {name: '初中高中', value: 6},
+      {name: '注意力很难', value: 6},
+      {name: '家长孩子', value: 6},
+      {name: '工作生活', value: 6},
+      {name: '小学一年级', value: 6},
+      {name: '成绩很差', value: 6},
+      {name: '学习效率', value: 6},
+      {name: '学习困难', value: 6},
+      {name: '印象深刻', value: 6},
+      {name: '智力测试', value: 6},
+      {name: '学习不好', value: 6},
+      {name: '吃药吃药', value: 6},
+      {name: '思维跳跃', value: 6},
+      {name: '多动障碍', value: 6},
+      {name: '倒数第一', value: 6},
+      {name: '意识不到', value: 6},
+      {name: '生活学习', value: 6},
+      {name: '10分钟', value: 6},
+      {name: '30分钟', value: 6},
+      {name: '药物作用', value: 6},
+      {name: '20分钟', value: 6},
+      {name: '一篇文章', value: 6},
+      {name: '不写作业', value: 6},
+      {name: '脾气暴躁', value: 6},
+      {name: '身边同学', value: 6},
+      {name: '24小时', value: 6},
+      {name: '新华医院', value: 5},
+      {name: '门诊医生', value: 5},
+      {name: '阅读困难', value: 5},
+      {name: '思维发散', value: 5},
+      {name: '晚上睡觉', value: 5},
+      {name: '发育迟缓', value: 5},
+      {name: '忘记吃药', value: 5},
+      {name: '语文成绩', value: 5},
+      {name: 'tamararosier', value: 5},
+      {name: '朋友相处', value: 5},
+      {name: '医院检查', value: 5},
+      {name: '肾上腺素多巴胺', value: 5},
+      {name: '数学物理', value: 5},
+      {name: '医院医生', value: 5},
+      {name: '吸引注意力', value: 5},
+      {name: '应对机制', value: 5},
+      {name: '睡眠时间', value: 5},
+      {name: '情绪失控', value: 5},
+      {name: '那天晚上', value: 5},
+      {name: '多动冲动', value: 5},
+      {name: '多动症儿童', value: 5},
+      {name: '大脑发育', value: 5},
+      {name: '抑郁情绪', value: 5},
+      {name: '大学学习', value: 5},
+      {name: '多动症治疗', value: 5},
+      {name: '成长过程', value: 5},
+      {name: '上课注意力', value: 5},
+      {name: '多巴胺分泌', value: 5},
+      {name: '成绩小学', value: 5},
+      {name: '成绩不好', value: 5},
+      {name: '身边朋友', value: 5},
+      {name: 'rosier博士', value: 5},
+      {name: '初中成绩', value: 5},
+      {name: '症状注意力', value: 5},
+      {name: '番茄工作', value: 5}
+    ];
+
+    // 3. 创建一个Image对象并加载图片
+    var maskImage = new Image();
+    maskImage.src = 'ciyun.png';
+    
+    // 4. 配置
+    var option = {
+
+      tooltip: {},
+      series: [{
+        type: 'wordCloud',
+        left: 'center',
+        top: 'center',
+        width: '100%',
+        height: '90%',
+        sizeRange: [10, 50],          // 增大字体范围
+        rotationRange: [-60, 60],     // 限制旋转角度
+        gridSize: 5,                  // 减小网格大小
+        gridSize: 8,
+        textStyle: {
+          color: function() {
+            var colors = ['#cab1ec', '#92b9ef', '#9aabd9'];
+            return colors[Math.floor(Math.random() * colors.length)];
+          }
+        },
+        // 设置maskImage，当图片加载完成后应用
+        maskImage: maskImage,
+        data: data
+      }]
+    };
+
+    // 5. 图片加载完成后渲染图表
+    maskImage.onload = function() {
+      chart.setOption(option);
+    };
+    
+    // 6. 图片加载失败时的处理
+    maskImage.onerror = function() {
+      console.error('图片加载失败，使用默认圆形形状');
+      // 移除maskImage配置，使用默认圆形
+      option.series[0].shape = 'circle';
+      option.series[0].maskImage = null;
+      chart.setOption(option);
+    };
+    
+    // 7. 监听窗口大小变化，重新渲染图表
+    window.addEventListener('resize', function() {
+      chart.resize();
+    });
+  </script>
+</body>
+</html>
