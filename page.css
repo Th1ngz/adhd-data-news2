@@ -660,16 +660,16 @@ p {
   line-height: 1.55;
 }
 
-.intro-section .story-shell,
-.side-by-side {
-  width: min(100%, var(--wide));
+.intro-section .story-shell {
+  width: min(100%, var(--frame));
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  align-items: start;
 }
 
-.intro-section .story-shell {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(250px, 340px);
-  gap: clamp(28px, 5vw, 72px);
-  align-items: center;
+.side-by-side {
+  width: min(100%, var(--wide));
 }
 
 .intro-art {
@@ -678,7 +678,7 @@ p {
 }
 
 .intro-art img:first-child {
-  width: min(100%, 320px);
+  width: min(100%, 360px);
   filter: drop-shadow(0 18px 26px rgba(110, 127, 156, 0.12));
 }
 
@@ -761,6 +761,13 @@ p {
   gap: 18px;
 }
 
+.medication-strip {
+  width: min(100%, var(--frame));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin: 8px auto 0;
+}
+
 .pill-figure {
   display: grid;
   grid-template-columns: 78px 1fr;
@@ -768,9 +775,25 @@ p {
   align-items: center;
 }
 
+.medication-strip .pill-figure {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  align-content: start;
+  gap: 12px;
+  padding: 18px 16px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.28);
+  text-align: center;
+}
+
 .pill-figure img {
   width: 72px;
   filter: drop-shadow(0 10px 18px rgba(88, 104, 134, 0.12));
+}
+
+.medication-strip .pill-figure img {
+  width: 82px;
 }
 
 .pill-figure figcaption {
@@ -803,19 +826,19 @@ p {
 }
 
 .frame-figure.is-types .auto-iframe {
-  min-height: 620px;
+  min-height: 660px;
 }
 
 .frame-figure.is-wordcloud .auto-iframe {
-  min-height: 500px;
+  min-height: 540px;
 }
 
 .frame-figure.is-help .auto-iframe {
-  min-height: 760px;
+  min-height: 820px;
 }
 
 .frame-figure.is-map .auto-iframe {
-  min-height: 700px;
+  min-height: 780px;
 }
 
 .frame-figure.is-scale .auto-iframe {
@@ -868,6 +891,7 @@ p {
   .support-layout,
   .map-layout,
   .medication-grid,
+  .medication-strip,
   .bridge-copy {
     grid-template-columns: 1fr;
   }
@@ -979,4 +1003,5 @@ p {
   .risk-stage {
     height: 166px;
   }
+
 }
