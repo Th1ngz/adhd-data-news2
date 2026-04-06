@@ -1,163 +1,277 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>成人ADHD共病率可视化</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-    /* ==== 全局 ==== */
-    body{
-        background-color:transparent;
-        margin:0;
-        padding:0;
-        display:flex;
-        justify-content:center;
-        align-items:flex-start;
-        min-height:auto;
-        font-family:"Microsoft YaHei","微软雅黑",'黑体',sans-serif; /* 黑体家族 */
-        color:#222;                                             /* 字体默认黑色 */
-        font-size:17px;                                         /* 全局字号上调 */
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>成人 ADHD 共病率可视化</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
-    /* ==== 容器 ==== */
-    .chart-container{
-        width:100%;
-        max-width:900px;
-        background-color:transparent;
-        border-radius:0;
-        padding:8px 0 0;
-        box-shadow:none;
+    body {
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: auto;
+      padding: 10px 0 0;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: #314360;
     }
 
-    .chart-title{
-        display:none;
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 920px;
+      padding: 8px 0 0;
     }
 
-    canvas{
-        width:100%!important;
-        height:480px!important;
+    .chart-container::before {
+      content: "";
+      position: absolute;
+      inset: 8% 10% 14%;
+      background:
+        radial-gradient(circle at 30% 56%, rgba(232, 211, 255, 0.28), transparent 28%),
+        radial-gradient(circle at 72% 38%, rgba(222, 236, 255, 0.32), transparent 30%);
+      filter: blur(26px);
+      opacity: 0.88;
+      pointer-events: none;
     }
 
-    .legend,
-    .chart-footer{
-        display:none;
+    .legend-note {
+      margin-bottom: 10px;
+      color: #7b8a9f;
+      font-size: 0.84rem;
+      text-align: right;
     }
-    
-</style>
+
+    canvas {
+      width: 100% !important;
+      height: 520px !important;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 680px) {
+      canvas {
+        height: 480px !important;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="chart-container">
+  <div class="chart-container">
+    <div class="legend-note">范围值以细线示意</div>
     <canvas id="comorbidityChart"></canvas>
-</div>
+  </div>
 
-<script>
-document.addEventListener('DOMContentLoaded',()=>{
-    /* 数据 */
-    const disorders=['抑郁症','抑郁障碍','焦虑障碍','双相障碍',
-                     '人格障碍','物质使用障碍','睡眠障碍','肥胖问题','超重'];
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const disorders = [
+        "抑郁症",
+        "抑郁障碍",
+        "焦虑障碍",
+        "双相障碍",
+        "人格障碍",
+        "物质使用障碍",
+        "睡眠障碍",
+        "肥胖问题",
+        "超重"
+      ];
 
-    const rates=['18.6','45.76','23.8~47.1','7.95~19.4',
-                 '10~75','2.43~35.12','13.43','19.3','31.2'];
+      const rates = [
+        "18.6",
+        "45.76",
+        "23.8~47.1",
+        "7.95~19.4",
+        "10~75",
+        "2.43~35.12",
+        "13.43",
+        "19.3",
+        "31.2"
+      ];
 
-    /* 处理范围 */
-    const processed=rates.map(r=>{
-        if(r.includes('~')){
-            const [min,max]=r.split('~').map(Number);
-            return {min,max,avg:(min+max)/2,range:true};
+      const processed = rates.map((rate) => {
+        if (rate.includes("~")) {
+          const [min, max] = rate.split("~").map(Number);
+          return { min, max, avg: (min + max) / 2, range: true };
         }
-        const val=parseFloat(r);
-        return {min:val,max:val,avg:val,range:false};
-    });
+        const value = Number.parseFloat(rate);
+        return { min: value, max: value, avg: value, range: false };
+      });
 
-    /* 图表 */
-    const ctx=document.getElementById('comorbidityChart').getContext('2d');
-    new Chart(ctx,{
-        type:'bar',
-        data:{
-            labels:disorders,
-            datasets:[{
-                label:'平均共病率 (%)',
-                data:processed.map(r=>r.avg),
-                backgroundColor:processed.map(r=>r.range?'rgba(232,211,255,.92)':'rgba(222,236,255,.95)'),
-                borderColor:'transparent',
-                borderWidth:0,
-                errorBars:disorders.reduce((o,name,i)=>{
-                    const r=processed[i];
-                    if(r.range){
-                        o[name]={min:r.avg-r.min,max:r.max-r.avg,color:'#6c6c6c',width:8,lineWidth:2};
-                    }
-                    return o;
-                },{})
-            }]
+      const rangeMarkerPlugin = {
+        id: "rangeMarkerPlugin",
+        afterDatasetsDraw(chart) {
+          const { ctx, scales } = chart;
+          const dataset = chart.getDatasetMeta(0);
+          ctx.save();
+
+          dataset.data.forEach((bar, index) => {
+            const item = processed[index];
+            if (!item.range) {
+              return;
+            }
+
+            const centerY = bar.y;
+            const minX = scales.x.getPixelForValue(item.min);
+            const maxX = scales.x.getPixelForValue(item.max);
+            const avgX = scales.x.getPixelForValue(item.avg);
+
+            ctx.strokeStyle = "rgba(94, 109, 137, 0.72)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(minX, centerY);
+            ctx.lineTo(maxX, centerY);
+            ctx.stroke();
+
+            [minX, maxX].forEach((x) => {
+              ctx.beginPath();
+              ctx.moveTo(x, centerY - 8);
+              ctx.lineTo(x, centerY + 8);
+              ctx.stroke();
+            });
+
+            ctx.fillStyle = "#354665";
+            ctx.beginPath();
+            ctx.arc(avgX, centerY, 3.2, 0, Math.PI * 2);
+            ctx.fill();
+          });
+
+          ctx.restore();
+        }
+      };
+
+      const ctx = document.getElementById("comorbidityChart").getContext("2d");
+
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: disorders,
+          datasets: [
+            {
+              data: processed.map((item) => item.avg),
+              borderRadius: 999,
+              borderSkipped: false,
+              barThickness: 24,
+              backgroundColor(context) {
+                const item = processed[context.dataIndex];
+                if (!context.chart.chartArea) {
+                  return item.range ? "rgba(232,211,255,0.88)" : "rgba(222,236,255,0.9)";
+                }
+                const gradient = context.chart.ctx.createLinearGradient(
+                  context.chart.chartArea.left,
+                  0,
+                  context.chart.chartArea.right,
+                  0
+                );
+                if (item.range) {
+                  gradient.addColorStop(0, "rgba(232,211,255,0.94)");
+                  gradient.addColorStop(1, "rgba(168,200,241,0.86)");
+                } else {
+                  gradient.addColorStop(0, "rgba(222,236,255,0.96)");
+                  gradient.addColorStop(1, "rgba(196,214,245,0.88)");
+                }
+                return gradient;
+              }
+            }
+          ]
         },
         options: {
-    indexAxis: 'y',
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: { display: false },
-        tooltip: {
-            backgroundColor: 'rgba(255,255,255,.96)',
-            borderColor: '#d9e3f0',
-            borderWidth: 1,
-            titleColor: '#222',
-            bodyColor: '#222',
-            titleFont: { family:'Microsoft YaHei', size:16, weight:'600' },
-            bodyFont:  { family:'Microsoft YaHei', size:15 },
-            callbacks: {
-                title: items => items[0].label,
-                label: ctx => {
-                    const r = processed[ctx.dataIndex];
-                    return r.range
-                      ? `范围：${r.min}% – ${r.max}% | 平均：${r.avg.toFixed(2)}%`
-                      : `共病率：${r.avg.toFixed(2)}%`;
-                }
-            }
-        }
-    },
-            scales: {
-                x: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: '共病率 (%)',
-                        color: '#222',                 // ← ① 轴标题颜色
-                        font: {
-                            family: 'Microsoft YaHei',
-                            size: 16,
-                            weight: '400'
-                        }
-                    },
-                    ticks: {
-                        color: '#222',                 // ← ③ 横轴刻度颜色
-                        font: {
-                            size: 14,
-                            family: 'Microsoft YaHei'
-                        },
-                        callback: v => v + '%'
-                    },
-                    max: 85,
-                    grid: {
-                        color: 'rgba(117,137,170,.12)'
-                    }
+          indexAxis: "y",
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: 1300,
+            easing: "easeOutQuart"
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: "rgba(255,255,255,0.96)",
+              borderColor: "rgba(207,180,244,0.32)",
+              borderWidth: 1,
+              titleColor: "#314360",
+              bodyColor: "#50617b",
+              padding: 12,
+              titleFont: {
+                family: "Microsoft YaHei",
+                size: 14,
+                weight: "700"
+              },
+              bodyFont: {
+                family: "Microsoft YaHei",
+                size: 13
+              },
+              callbacks: {
+                title(items) {
+                  return items[0].label;
                 },
-                y: {
-                    grid: { display: false },
-                    ticks: {
-                        color: '#222',                 // ← ② 纵轴文字颜色
-                        font: {
-                            family: 'Microsoft YaHei',
-                            size: 16,                  // 字号加大
-                            weight: '400'              // 加粗，避免“扁细”
-                        }
-                    }
+                label(context) {
+                  const item = processed[context.dataIndex];
+                  if (item.range) {
+                    return `范围 ${item.min}% - ${item.max}% ，平均 ${item.avg.toFixed(2)}%`;
+                  }
+                  return `共病率 ${item.avg.toFixed(2)}%`;
                 }
+              }
+            }
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+              suggestedMax: 85,
+              grid: {
+                color: "rgba(117,137,170,0.12)"
+              },
+              border: {
+                display: false
+              },
+              ticks: {
+                color: "#65748c",
+                font: {
+                  family: "Microsoft YaHei",
+                  size: 13
+                },
+                callback(value) {
+                  return `${value}%`;
+                }
+              },
+              title: {
+                display: true,
+                text: "共病率 (%)",
+                color: "#6a7890",
+                font: {
+                  family: "Microsoft YaHei",
+                  size: 13,
+                  weight: "400"
+                }
+              }
             },
-            animation: { duration: 1500, easing: 'easeOutQuart' }
-        }
+            y: {
+              grid: {
+                display: false
+              },
+              border: {
+                display: false
+              },
+              ticks: {
+                color: "#314360",
+                font: {
+                  family: "Microsoft YaHei",
+                  size: 15
+                }
+              }
+            }
+          }
+        },
+        plugins: [rangeMarkerPlugin]
+      });
     });
-});
-</script>
+  </script>
 </body>
 </html>

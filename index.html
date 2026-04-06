@@ -9,6 +9,7 @@
 <body>
   <div class="page-shell">
     <section id="hero" class="hero story-section">
+      <div class="hero-scene" aria-hidden="true"></div>
       <img src="./butterfly.png" alt="" class="hero-butterfly" loading="lazy" />
       <div class="story-shell">
         <div class="hero-copy reveal">
@@ -36,22 +37,36 @@
             <p>也就是说，在搜索结果里，用户首先遇到的，往往不是如果你要去医院，该怎么做，而是另一类更熟悉的表达：为什么我总是做不到，为什么这些描述和我这么像，我一直以为只是自己不够自律。</p>
           </div>
 
-          <div class="chart-stack">
-            <article class="chart-block">
-              <p class="chart-takeaway">搜索结果里最常见的，不是医院入口，而是困境、共鸣与解释。</p>
-              <div id="content-type-chart" class="chart-host"></div>
-              <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
-            </article>
+          <div class="scrolly-story">
+            <div class="story-steps">
+              <article class="story-step is-active" data-panel="search-content-panel">
+                <p class="step-kicker">第一眼看到的内容</p>
+                <p class="chart-takeaway">搜索结果里最常见的，不是医院入口，而是困境、共鸣与解释。</p>
+                <p>在 145 条样本里，患者经验、困境叙事和自我识别占据了最醒目的位置。平台先递过来的，往往不是一张诊疗地图，而是一句能让人立刻对号入座的话。</p>
+              </article>
 
-            <div class="chart-bridge">
-              <p>继续往下看，谁在解释 ADHD，同样重要。</p>
-              <p>在这些搜索结果里，占比最高的并不是医生或医院账号，而是疑似患者、自述困扰者、心理科普账号和普通生活博主。医生、医院和专业机构的比例很低。这意味着，很多人对 ADHD 的第一印象，并不是来自正式医疗入口，而是来自经验叙述、情绪共鸣和平台上的知识转述。</p>
+              <article class="story-step" data-panel="search-author-panel">
+                <p class="step-kicker">谁在充当解释者</p>
+                <p>再往下看，谁在解释 ADHD，同样重要。</p>
+                <p>在这些搜索结果里，占比最高的并不是医生或医院账号，而是疑似患者、自述困扰者、心理科普账号和普通生活博主。医生、医院和专业机构的比例很低。这意味着，很多人对 ADHD 的第一印象，并不是来自正式医疗入口，而是来自经验叙述、情绪共鸣和平台上的知识转述。</p>
+              </article>
             </div>
 
-            <article class="chart-block">
-              <div id="author-type-chart" class="chart-host"></div>
-              <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
-            </article>
+            <div class="story-visual">
+              <div class="story-visual-stage">
+                <article class="chart-panel is-active" id="search-content-panel">
+                  <p class="panel-label">内容主类型</p>
+                  <div id="content-type-chart" class="chart-host"></div>
+                  <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
+                </article>
+
+                <article class="chart-panel" id="search-author-panel">
+                  <p class="panel-label">作者类型</p>
+                  <div id="author-type-chart" class="chart-host"></div>
+                  <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
+                </article>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -65,23 +80,47 @@
             <p>也正因为如此，真正传播得快的，往往不是就诊流程，而是那些更容易让人把自己代入进去的表达。</p>
           </div>
 
-          <div class="chart-stack">
-            <article class="chart-block">
-              <p class="chart-takeaway">更容易传播的，往往不是怎么去医院，而是这是不是在说我。</p>
-              <div id="engagement-chart" class="chart-host"></div>
-              <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
-            </article>
+          <div class="scrolly-story">
+            <div class="story-steps">
+              <article class="story-step is-active" data-panel="engagement-panel" data-metric="likes">
+                <p class="step-kicker">点赞</p>
+                <p class="chart-takeaway">更容易传播的，往往不是怎么去医院，而是这是不是在说我。</p>
+                <p>把互动拆开来看，点赞先勾勒出哪类内容最容易被迅速点亮。最先被推高的，往往不是流程说明，而是那些能让人马上认出自己的表达。</p>
+              </article>
 
-            <div class="chart-bridge">
-              <p>这种代入感之所以成立，还因为它碰到的并不是抽象概念，而是已经进入日常生活的实际困难。</p>
-              <p>情绪管理、学习、生活管理、人际关系、工作表现，这些场景反复出现在内容里。许多人在平台上看到的，不只是某个词，而是自己已经经历了很久却一直说不清楚的失序感。</p>
+              <article class="story-step" data-panel="engagement-panel" data-metric="favorites">
+                <p class="step-kicker">收藏</p>
+                <p>换到收藏，排序会轻微变化。用户更愿意留下来的，通常也是那些方便反复对照、拿来解释自身状态的内容。</p>
+              </article>
+
+              <article class="story-step" data-panel="engagement-panel" data-metric="comments">
+                <p class="step-kicker">评论</p>
+                <p>到了评论区，互动更像一场公开的经验接力。很多人会在这里补上自己的生活细节，把原本零散的困扰继续说下去。</p>
+              </article>
+
+              <article class="story-step" data-panel="impact-panel">
+                <p class="step-kicker">生活损害</p>
+                <p>这种代入感之所以成立，还因为它碰到的并不是抽象概念，而是已经进入日常生活的实际困难。</p>
+                <p>情绪管理、学习、生活管理、人际关系、工作表现，这些场景反复出现在内容里。许多人在平台上看到的，不只是某个词，而是自己已经经历了很久却一直说不清楚的失序感。</p>
+              </article>
             </div>
 
-            <article class="chart-block">
-              <p class="chart-takeaway">这些内容会引发代入，是因为它们触到了真实存在的生活损害。</p>
-              <div id="impact-chart" class="chart-host"></div>
-              <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
-            </article>
+            <div class="story-visual">
+              <div class="story-visual-stage">
+                <article class="chart-panel is-active" id="engagement-panel">
+                  <p class="panel-label">互动中位数</p>
+                  <div id="engagement-chart" class="chart-host"></div>
+                  <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
+                </article>
+
+                <article class="chart-panel" id="impact-panel">
+                  <p class="panel-label">功能损害场景</p>
+                  <p class="chart-takeaway">这些内容会引发代入，是因为它们触到了真实存在的生活损害。</p>
+                  <div id="impact-chart" class="chart-host"></div>
+                  <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
+                </article>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -96,33 +135,49 @@
             <p>问题不在于这些困扰是不是存在，而在于相似的体验，并不自动等于临床意义上的 ADHD。</p>
           </div>
 
-          <div class="chart-stack">
-            <article class="chart-block">
-              <p class="chart-takeaway">平台更擅长讲你为什么难受，不太擅长讲什么才算临床障碍。</p>
-              <div id="boundary-chart" class="chart-host"></div>
-              <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
-            </article>
+          <div class="scrolly-story">
+            <div class="story-steps">
+              <article class="story-step is-active" data-panel="boundary-panel">
+                <p class="step-kicker">边界被省略时</p>
+                <p class="chart-takeaway">平台更擅长讲你为什么难受，不太擅长讲什么才算临床障碍。</p>
+                <p>如果把临床判断真正依赖的几个条件拆开来看，就能看到缺失发生在哪里。功能损害被说得最多，但早发性、持续性和跨情境这些更关键的判断条件，出现得明显更少。</p>
+              </article>
 
-            <div class="chart-bridge">
-              <p>如果把强共鸣和边界提醒放在一起看，这种差异会更直观。</p>
-              <p>样本中，占比较的一类内容，正是那些容易让人迅速代入、却没有同时说明清楚诊断边界的表达。它们未必出于误导，但平台机制天然更偏爱这类简单、明确、传播成本低的叙事。</p>
+              <article class="story-step" data-panel="matrix-panel">
+                <p class="step-kicker">强共鸣 × 弱边界</p>
+                <p>如果把强共鸣和边界提醒放在一起看，这种差异会更直观。</p>
+                <p>样本中，占比较高的一类内容，正是那些容易让人迅速代入、却没有同时说明清楚诊断边界的表达。它们未必出于误导，但平台机制天然更偏爱这类简单、明确、传播成本低的叙事。</p>
+              </article>
+
+              <article class="story-step" data-panel="risk-panel">
+                <p class="step-kicker">风险表达</p>
+                <p>除了是否讲清边界，还有另一层问题：哪些表达本身就在降低判断门槛？</p>
+                <p>一些内容会直接引导读者自我判断，一些内容会把拖延、分心、低效等普遍体验直接包装成 ADHD，另一些则进一步把 ADHD 人格化、标签化，甚至当作一种身份风格来讲述。它们未必最夸张，却会悄悄改变人们理解自己的方式。</p>
+              </article>
             </div>
 
-            <article class="chart-block">
-              <div id="matrix-chart" class="chart-host"></div>
-              <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
-            </article>
+            <div class="story-visual">
+              <div class="story-visual-stage story-visual-stage--tall">
+                <article class="chart-panel is-active" id="boundary-panel">
+                  <p class="panel-label">边界提及率</p>
+                  <div id="boundary-chart" class="chart-host"></div>
+                  <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
+                </article>
 
-            <div class="chart-bridge">
-              <p>除了是否讲清边界，还有另一层问题：哪些表达本身就在降低判断门槛？</p>
-              <p>一些内容会直接引导读者自我判断，一些内容会把拖延、分心、低效等普遍体验直接包装成 ADHD，另一些则进一步把 ADHD 人格化、标签化，甚至当作一种身份风格来讲述。它们未必最夸张，却会悄悄改变人们理解自己的方式。</p>
+                <article class="chart-panel" id="matrix-panel">
+                  <p class="panel-label">共鸣与边界四象限</p>
+                  <div id="matrix-chart" class="chart-host"></div>
+                  <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
+                </article>
+
+                <article class="chart-panel" id="risk-panel">
+                  <p class="panel-label">风险表达</p>
+                  <p class="chart-takeaway">平台上的风险，不只来自说得太多，也来自说得太像。</p>
+                  <div id="risk-chart" class="chart-host"></div>
+                  <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
+                </article>
+              </div>
             </div>
-
-            <article class="chart-block">
-              <p class="chart-takeaway">平台上的风险，不只来自说得太多，也来自说得太像。</p>
-              <div id="risk-chart" class="chart-host"></div>
-              <p class="chart-source">数据来源：小红书搜索“ADHD”综合排序结果人工编码样本（n=145）</p>
-            </article>
           </div>
         </div>
       </section>
@@ -145,7 +200,7 @@
         </div>
       </section>
 
-      <section id="types" class="story-section tight">
+      <section id="types" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <p class="block-lead">ADHD 并不“千人一面”。</p>
@@ -160,7 +215,7 @@
         </div>
       </section>
 
-      <section id="comorbidity" class="story-section tight">
+      <section id="comorbidity" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <p class="block-lead">并且，ADHD 往往不是“单线程”的疾病。75% 患者至少共病一种精神障碍。</p>
@@ -176,7 +231,7 @@
         </div>
       </section>
 
-      <section id="voices" class="story-section tight">
+      <section id="voices" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <p>在知乎、小红书、豆瓣等平台上，ADHD 逐渐成为热词。小红书上的 #ADHD 话题浏览量高达 4.7 亿次，讨论帖近 349.4 万，热度超过 99.9% 的其他话题。知乎上一条关于成人 ADHD 真实感受的提问，也收到了 239 条回答。虽然这些回答只是网络自述，无法确认回答者是否都经过了明确诊断，但其中反复出现的词语，仍然呈现出一些高度相似的困扰。</p>
@@ -191,7 +246,7 @@
         </div>
       </section>
 
-      <section id="help" class="story-section tight">
+      <section id="help" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <p>豆瓣小组〖ADD/ADHD患者〗的三年发帖数据中，我们筛选了 500 条“疑难解惑”模块标题，提取出了用户关注最多的问题类型。有人反复追问确诊流程，有人在意药效与副作用，也有人在问工作、学习和情绪到底该怎么撑下去。</p>
@@ -206,7 +261,7 @@
         </div>
       </section>
 
-      <section id="hospitals" class="story-section tight">
+      <section id="hospitals" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <p class="block-lead">当下定决心，真正能确诊 ADHD 的医院在哪？</p>
@@ -221,7 +276,7 @@
         </div>
       </section>
 
-      <section id="diagnosis" class="story-section tight">
+      <section id="diagnosis" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <p>对很多人来说，从怀疑自己 ADHD 到拿到诊断报告，中间是一条充满阻碍的路。</p>
@@ -236,7 +291,7 @@
         </div>
       </section>
 
-      <section id="medication" class="story-section tight">
+      <section id="medication" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <p class="block-lead">药物治疗是成人 ADHD 的主要干预手段。然而，用药难成了患者面临的又一座“大山”。</p>
@@ -263,7 +318,7 @@
         </div>
       </section>
 
-      <section id="scale" class="story-section tight">
+      <section id="scale" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
             <h2>如果你在这些描述里反复看见自己</h2>

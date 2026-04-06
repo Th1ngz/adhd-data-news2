@@ -24,6 +24,10 @@ function appendChildren(parent, children) {
 
 function renderContentRibbonChart(data) {
   const host = document.getElementById("content-type-chart");
+  if (!host) {
+    return;
+  }
+
   const items = visibleItems(data.contentTypeStats);
   const maxCount = Math.max(...items.map((item) => item.count));
   const chart = document.createElement("div");
@@ -64,6 +68,10 @@ function renderContentRibbonChart(data) {
 
 function renderAuthorDotChart(data) {
   const host = document.getElementById("author-type-chart");
+  if (!host) {
+    return;
+  }
+
   const items = visibleItems(data.authorTypeStats);
   const chart = document.createElement("div");
   chart.className = "author-dot-chart";
@@ -102,6 +110,10 @@ function renderAuthorDotChart(data) {
 
 function renderEngagementChart(data) {
   const host = document.getElementById("engagement-chart");
+  if (!host) {
+    return;
+  }
+
   host.innerHTML = "";
 
   const wrapper = document.createElement("div");
@@ -128,6 +140,11 @@ function renderEngagementChart(data) {
   };
 
   const renderMetric = (metricKey) => {
+    if (host.dataset.metric === metricKey) {
+      return;
+    }
+
+    host.dataset.metric = metricKey;
     const items = [...data.engagementMedianStats].sort((left, right) => right[metricKey] - left[metricKey]);
     const maxValue = Math.max(...items.map((item) => item[metricKey]));
     const chart = document.createElement("div");
@@ -182,11 +199,16 @@ function renderEngagementChart(data) {
 
   appendChildren(wrapper, [switches, chartHost]);
   host.appendChild(wrapper);
+  host._setMetric = renderMetric;
   renderMetric("likes");
 }
 
 function renderImpactChart(data) {
   const host = document.getElementById("impact-chart");
+  if (!host) {
+    return;
+  }
+
   const maxCount = Math.max(...data.impactStats.map((item) => item.count));
   const chart = document.createElement("div");
   chart.className = "pillar-chart";
@@ -221,6 +243,10 @@ function renderImpactChart(data) {
 
 function renderBoundaryChart(data) {
   const host = document.getElementById("boundary-chart");
+  if (!host) {
+    return;
+  }
+
   const chart = document.createElement("div");
   chart.className = "step-chart";
 
@@ -249,7 +275,7 @@ function renderBoundaryChart(data) {
   data.boundaryCoverageStats.forEach((item) => {
     const card = document.createElement("article");
     card.className = "step-card";
-    card.style.height = `${Math.max(110 + (item.percent / maxPercent) * 140, 150)}px`;
+    card.style.height = `${Math.max(118 + (item.percent / maxPercent) * 150, 160)}px`;
 
     const stat = document.createElement("div");
     stat.className = "step-stat";
@@ -274,6 +300,10 @@ function renderBoundaryChart(data) {
 
 function renderMatrixChart(data) {
   const host = document.getElementById("matrix-chart");
+  if (!host) {
+    return;
+  }
+
   const lookup = Object.fromEntries(
     data.matrixStats.map((item) => [`${item.resonance}-${item.boundary}`, item])
   );
@@ -347,6 +377,10 @@ function renderMatrixChart(data) {
 
 function renderRiskChart(data) {
   const host = document.getElementById("risk-chart");
+  if (!host) {
+    return;
+  }
+
   const labelMap = {
     "是否存在人格化/标签化/天赋化表达": "人格化 / 标签化 / 天赋化表达",
     "是否直接引导自我判断": "直接引导自我判断",
@@ -375,7 +409,7 @@ function renderRiskChart(data) {
     if (item.label === "是否存在商业导向") {
       bar.classList.add("is-soft");
     }
-    bar.style.height = `${Math.max(42 + (item.percent / maxPercent) * 78, 52)}px`;
+    bar.style.height = `${Math.max(42 + (item.percent / maxPercent) * 86, 58)}px`;
 
     const label = document.createElement("div");
     label.className = "risk-label";
@@ -470,8 +504,128 @@ function initReveal() {
   nodes.forEach((node) => observer.observe(node));
 }
 
+function setActiveStoryStep(step) {
+  const story = step.closest(".scrolly-story");
+  if (!story || story._activeStep === step) {
+    return;
+  }
+
+  story._activeStep = step;
+  story.querySelectorAll(".story-step").forEach((item) => {
+    item.classList.toggle("is-active", item === step);
+  });
+
+  const targetPanel = step.dataset.panel;
+  if (targetPanel) {
+    story.querySelectorAll(".chart-panel").forEach((panel) => {
+      panel.classList.toggle("is-active", panel.id === targetPanel);
+    });
+  }
+
+  if (step.dataset.metric) {
+    const engagementHost = story.querySelector("#engagement-chart");
+    if (engagementHost && typeof engagementHost._setMetric === "function") {
+      engagementHost._setMetric(step.dataset.metric);
+    }
+  }
+}
+
+function initScrollyStories() {
+  const stories = [...document.querySelectorAll(".scrolly-story")];
+  if (!stories.length) {
+    return;
+  }
+
+  stories.forEach((story) => {
+    const firstStep = story.querySelector(".story-step");
+    if (firstStep) {
+      setActiveStoryStep(firstStep);
+    }
+  });
+
+  if (!("IntersectionObserver" in window) || window.matchMedia("(max-width: 980px)").matches) {
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const visibleEntries = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((left, right) => right.intersectionRatio - left.intersectionRatio);
+
+      visibleEntries.forEach((entry) => {
+        setActiveStoryStep(entry.target);
+      });
+    },
+    {
+      threshold: [0, 0.18, 0.36, 0.54, 0.72],
+      rootMargin: "-38% 0px -38% 0px"
+    }
+  );
+
+  document.querySelectorAll(".story-step").forEach((step) => observer.observe(step));
+}
+
+function initHeroDepth() {
+  const hero = document.getElementById("hero");
+  if (!hero || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    return;
+  }
+
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const rect = hero.getBoundingClientRect();
+    const progress = Math.min(Math.max((window.innerHeight - rect.top) / (window.innerHeight + rect.height), 0), 1);
+    const shift = Math.round((progress - 0.34) * 34);
+    hero.style.setProperty("--hero-shift", `${shift}px`);
+  };
+
+  const requestUpdate = () => {
+    if (ticking) {
+      return;
+    }
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+}
+
+function initRealityMode() {
+  const bridge = document.getElementById("reality-bridge");
+  if (!bridge) {
+    return;
+  }
+
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const rect = bridge.getBoundingClientRect();
+    const shouldActivate = rect.top < window.innerHeight * 0.62;
+    document.body.classList.toggle("is-reality", shouldActivate);
+  };
+
+  const requestUpdate = () => {
+    if (ticking) {
+      return;
+    }
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderStoryCharts();
   initFrames();
   initReveal();
+  initScrollyStories();
+  initHeroDepth();
+  initRealityMode();
 });
