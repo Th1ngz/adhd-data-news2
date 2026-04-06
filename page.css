@@ -209,6 +209,21 @@ p {
   gap: 38px;
 }
 
+.chart-bridge {
+  width: min(100%, var(--text));
+  display: grid;
+  gap: 0.85rem;
+  margin: 2px 0 6px;
+}
+
+.chart-bridge p {
+  color: #607089;
+}
+
+.chart-bridge p:first-child {
+  color: #344661;
+}
+
 .chart-block {
   display: grid;
   gap: 16px;
@@ -694,9 +709,16 @@ p {
 }
 
 .bridge-lead {
+  padding-left: 0;
+  margin-bottom: 0;
   color: #324460;
   font-size: clamp(1.34rem, 2.4vw, 1.96rem);
   line-height: 1.55;
+  letter-spacing: 0;
+}
+
+.bridge-lead::before {
+  content: none;
 }
 
 .bridge-art {
@@ -756,6 +778,13 @@ p {
   font-size: 0.95rem;
 }
 
+.block-lead {
+  max-width: var(--text);
+  color: #324460;
+  font-size: 1.08rem;
+  margin-bottom: 0.8rem;
+}
+
 .frame-wrap {
   width: 100%;
   overflow: visible;
@@ -789,12 +818,12 @@ p {
   min-height: 700px;
 }
 
-.frame-figure.is-bias .auto-iframe {
-  min-height: 1260px;
-}
-
 .frame-figure.is-scale .auto-iframe {
   min-height: 980px;
+}
+
+.scale-note {
+  margin-top: 24px;
 }
 
 .footer {
@@ -813,6 +842,13 @@ p {
 
 .footer p + p {
   margin-top: 0.95rem;
+}
+
+.footer-lead {
+  color: #324460;
+  font-size: clamp(1.34rem, 2.4vw, 1.92rem);
+  line-height: 1.72;
+  margin-bottom: 1.3rem;
 }
 
 .reveal {
@@ -942,9 +978,5 @@ p {
 
   .risk-stage {
     height: 166px;
-  }
-
-  .frame-figure.is-bias .auto-iframe {
-    min-height: 1380px;
   }
 }
