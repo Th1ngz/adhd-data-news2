@@ -268,32 +268,40 @@ function renderBoundaryChart(data) {
     "是否提醒不要互联网诊断": "提醒不要互联网诊断"
   };
 
-  const maxPercent = Math.max(...data.boundaryCoverageStats.map((item) => item.percent));
   const grid = document.createElement("div");
   grid.className = "step-chart-grid";
 
   data.boundaryCoverageStats.forEach((item) => {
     const card = document.createElement("article");
     card.className = "step-card";
-    card.style.height = `${Math.max(118 + (item.percent / maxPercent) * 150, 160)}px`;
+
+    const percent = document.createElement("div");
+    percent.className = "step-percent";
+    percent.textContent = formatPercent(item.percent);
 
     const stat = document.createElement("div");
     stat.className = "step-stat";
-    stat.textContent = `${item.count} · ${formatPercent(item.percent)}`;
+    stat.textContent = `${item.count} 条内容`;
 
     const label = document.createElement("div");
     label.className = "step-label";
     label.textContent = labelMap[item.label] || item.label;
 
-    const note = document.createElement("p");
-    note.className = "step-note";
-    note.textContent = explanations[item.label] || "";
-
-    appendChildren(card, [stat, label, note]);
+    appendChildren(card, [percent, stat, label]);
     grid.appendChild(card);
   });
 
-  chart.appendChild(grid);
+  const notes = document.createElement("div");
+  notes.className = "step-notes";
+
+  data.boundaryCoverageStats.forEach((item) => {
+    const note = document.createElement("div");
+    note.className = "step-note";
+    note.innerHTML = `<strong>${labelMap[item.label] || item.label}</strong><span>${explanations[item.label] || ""}</span>`;
+    notes.appendChild(note);
+  });
+
+  appendChildren(chart, [grid, notes]);
   host.innerHTML = "";
   host.appendChild(chart);
 }
@@ -537,33 +545,59 @@ function initScrollyStories() {
   }
 
   stories.forEach((story) => {
-    const firstStep = story.querySelector(".story-step");
+    story._steps = [...story.querySelectorAll(".story-step:not(.story-step--spacer)")];
+    const firstStep = story._steps[0];
     if (firstStep) {
       setActiveStoryStep(firstStep);
     }
   });
 
-  if (!("IntersectionObserver" in window) || window.matchMedia("(max-width: 980px)").matches) {
+  if (window.matchMedia("(max-width: 980px)").matches) {
     return;
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      const visibleEntries = entries
-        .filter((entry) => entry.isIntersecting)
-        .sort((left, right) => right.intersectionRatio - left.intersectionRatio);
+  let ticking = false;
 
-      visibleEntries.forEach((entry) => {
-        setActiveStoryStep(entry.target);
+  const update = () => {
+    ticking = false;
+    const viewportCenter = window.innerHeight * 0.5;
+
+    stories.forEach((story) => {
+      const storyRect = story.getBoundingClientRect();
+      if (storyRect.bottom < window.innerHeight * 0.08 || storyRect.top > window.innerHeight * 0.92) {
+        return;
+      }
+
+      let activeStep = story._steps[0];
+      let minDistance = Number.POSITIVE_INFINITY;
+
+      story._steps.forEach((step) => {
+        const rect = step.getBoundingClientRect();
+        const center = rect.top + rect.height / 2;
+        const distance = Math.abs(center - viewportCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          activeStep = step;
+        }
       });
-    },
-    {
-      threshold: [0, 0.18, 0.36, 0.54, 0.72],
-      rootMargin: "-38% 0px -38% 0px"
-    }
-  );
 
-  document.querySelectorAll(".story-step").forEach((step) => observer.observe(step));
+      if (activeStep) {
+        setActiveStoryStep(activeStep);
+      }
+    });
+  };
+
+  const requestUpdate = () => {
+    if (ticking) {
+      return;
+    }
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
 }
 
 function initHeroDepth() {

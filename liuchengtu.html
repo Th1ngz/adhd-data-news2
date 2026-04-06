@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>成人 ADHD 诊疗流程图</title>
+  <title>成人 ADHD 诊断路径带</title>
   <style>
     * {
       box-sizing: border-box;
@@ -16,31 +16,32 @@
       min-height: auto;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       padding: 12px 8px 0;
       color: #314360;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
     }
 
-    .flow-container {
+    .path-wrap {
       position: relative;
       width: 100%;
       max-width: 1000px;
+      padding-bottom: 10px;
     }
 
-    .flow-container::before {
+    .path-wrap::before {
       content: "";
       position: absolute;
-      inset: 12% 8% 20%;
+      inset: 10% 6% 16%;
       background:
-        radial-gradient(circle at 24% 46%, rgba(232, 211, 255, 0.24), transparent 24%),
-        radial-gradient(circle at 72% 42%, rgba(222, 236, 255, 0.28), transparent 28%);
+        radial-gradient(circle at 22% 42%, rgba(232, 211, 255, 0.24), transparent 24%),
+        radial-gradient(circle at 76% 56%, rgba(222, 236, 255, 0.28), transparent 28%);
       filter: blur(28px);
       opacity: 0.88;
       pointer-events: none;
     }
 
-    .flow-steps {
+    .path-band {
       position: relative;
       display: grid;
       grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -48,162 +49,190 @@
       align-items: start;
     }
 
-    .flow-steps::before {
+    .path-band::before {
       content: "";
       position: absolute;
-      left: 7%;
-      right: 7%;
-      top: 36px;
-      height: 2px;
-      background: linear-gradient(90deg, rgba(207, 180, 244, 0.52), rgba(168, 200, 241, 0.46));
+      left: 10%;
+      right: 10%;
+      top: 30px;
+      height: 10px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(232, 211, 255, 0.86), rgba(168, 200, 241, 0.78));
+      opacity: 0.72;
       z-index: 0;
     }
 
-    .step {
+    .path-node {
       position: relative;
       z-index: 1;
-      border-radius: 20px;
-      overflow: hidden;
-      background: rgba(255, 255, 255, 0.34);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34);
+      padding-top: 18px;
+    }
+
+    .path-dot {
+      width: 24px;
+      height: 24px;
+      margin: 0 auto 14px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow:
+        0 0 0 6px rgba(255, 255, 255, 0.22),
+        0 0 0 1px rgba(207, 180, 244, 0.44);
+    }
+
+    .path-card {
+      min-height: 260px;
+      padding: 16px 16px 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.4);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.36);
       backdrop-filter: blur(8px);
     }
 
-    .step-header {
-      position: relative;
-      padding: 14px 14px 12px;
+    .path-step {
+      color: #7a8aa0;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+
+    .path-title {
+      color: #304260;
       font-size: 1rem;
-      font-weight: 700;
-      text-align: center;
-      color: #2e405e;
+      line-height: 1.45;
+      margin-bottom: 10px;
     }
 
-    .step-header::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: -10px;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      transform: translateX(-50%);
-      background: rgba(255, 255, 255, 0.96);
-      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.22);
+    .path-list {
+      display: grid;
+      gap: 8px;
     }
 
-    .step-content {
-      padding: 16px 15px 18px;
-      border-top: 1px solid rgba(117, 137, 170, 0.1);
-    }
-
-    .step-item {
+    .path-list li {
       position: relative;
-      padding: 7px 0 7px 18px;
+      padding-left: 14px;
+      list-style: none;
+      color: #5b6b84;
       font-size: 0.88rem;
-      line-height: 1.55;
-      color: #50617b;
+      line-height: 1.6;
     }
 
-    .step-item::before {
+    .path-list li::before {
       content: "";
       position: absolute;
       left: 0;
-      top: 14px;
-      width: 7px;
-      height: 7px;
+      top: 0.58em;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: rgba(168, 200, 241, 0.9);
+      background: rgba(168, 200, 241, 0.92);
     }
 
-    .step-item-details {
-      color: #73829a;
-      font-size: 0.8rem;
-      margin-top: 4px;
-    }
-
-    .step-1 .step-header { background: rgba(232, 211, 255, 0.88); }
-    .step-2 .step-header { background: rgba(214, 225, 255, 0.9); }
-    .step-3 .step-header { background: rgba(222, 236, 255, 0.92); }
-    .step-4 .step-header { background: rgba(198, 207, 255, 0.84); }
-    .step-5 .step-header { background: rgba(176, 208, 255, 0.84); }
-
-    .flow-notes {
-      margin-top: 18px;
-      text-align: center;
-      color: #7b8a9f;
+    .path-note {
+      margin-top: 16px;
+      color: #76859b;
       font-size: 0.84rem;
+      text-align: center;
     }
 
-    @media (max-width: 860px) {
-      .flow-steps {
+    @media (max-width: 920px) {
+      .path-band {
         grid-template-columns: 1fr;
       }
 
-      .flow-steps::before {
-        display: none;
+      .path-band::before {
+        left: 30px;
+        right: auto;
+        top: 34px;
+        bottom: 38px;
+        width: 10px;
+        height: auto;
       }
 
-      .step-header::after {
-        display: none;
+      .path-node {
+        padding-top: 0;
+        padding-left: 38px;
+      }
+
+      .path-dot {
+        position: absolute;
+        left: 0;
+        top: 22px;
+        margin: 0;
+      }
+
+      .path-card {
+        min-height: auto;
       }
     }
   </style>
 </head>
 <body>
-  <div class="flow-container">
-    <div class="flow-steps">
-      <div class="step step-1">
-        <div class="step-header">病史采集</div>
-        <div class="step-content">
-          <div class="step-item">儿童/成年期</div>
-          <div class="step-item">症状确定(ADHD/共病)</div>
-          <div class="step-item">病程确定</div>
-          <div class="step-item">功能损害<div class="step-item-details">学习、个人生活、家庭、职业功能</div></div>
-          <div class="step-item">个人史/既往史/家族史</div>
+  <div class="path-wrap">
+    <div class="path-band">
+      <section class="path-node">
+        <div class="path-dot"></div>
+        <div class="path-card">
+          <div class="path-step">STEP 1</div>
+          <h3 class="path-title">怀疑自己存在长期困扰</h3>
+          <ul class="path-list">
+            <li>分心、拖延、情绪起伏等问题长期反复出现</li>
+            <li>困扰不是一时状态，而是已经持续影响日常</li>
+          </ul>
         </div>
-      </div>
+      </section>
 
-      <div class="step step-2">
-        <div class="step-header">心理测评</div>
-        <div class="step-content">
-          <div class="step-item">ADHD症状评定量表</div>
-          <div class="step-item">执行功能评估</div>
-          <div class="step-item">常见共病症状评估</div>
+      <section class="path-node">
+        <div class="path-dot"></div>
+        <div class="path-card">
+          <div class="path-step">STEP 2</div>
+          <h3 class="path-title">进入精神专科 / 心理专科门诊</h3>
+          <ul class="path-list">
+            <li>由医生接诊，了解主要困扰与求诊原因</li>
+            <li>初步判断是否需要进一步做 ADHD 方向评估</li>
+          </ul>
         </div>
-      </div>
+      </section>
 
-      <div class="step step-3">
-        <div class="step-header">常规与辅助检查</div>
-        <div class="step-content">
-          <div class="step-item">体格检查</div>
-          <div class="step-item">实验室检查</div>
-          <div class="step-item">脑电图和神经影像<div class="step-item-details">(必要时)</div></div>
+      <section class="path-node">
+        <div class="path-dot"></div>
+        <div class="path-card">
+          <div class="path-step">STEP 3</div>
+          <h3 class="path-title">病史采集与症状评估</h3>
+          <ul class="path-list">
+            <li>回顾儿童 / 青少年时期表现</li>
+            <li>了解既往史、家族史</li>
+            <li>评估 ADHD 核心症状与共病情况</li>
+          </ul>
         </div>
-      </div>
+      </section>
 
-      <div class="step step-4">
-        <div class="step-header">诊断</div>
-        <div class="step-content">
-          <div class="step-item">ICD-11诊断标准</div>
-          <div class="step-item">鉴别诊断</div>
-          <div class="step-item">ADHD分类诊断</div>
-          <div class="step-item">共病诊断</div>
-          <div class="step-item">诊断性访谈工具<div class="step-item-details">(必要时)</div></div>
+      <section class="path-node">
+        <div class="path-dot"></div>
+        <div class="path-card">
+          <div class="path-step">STEP 4</div>
+          <h3 class="path-title">功能损害与辅助评估</h3>
+          <ul class="path-list">
+            <li>判断学习、工作、家庭、人际是否受到影响</li>
+            <li>必要时辅以心理测评 / 量表</li>
+          </ul>
         </div>
-      </div>
+      </section>
 
-      <div class="step step-5">
-        <div class="step-header">综合治疗和随访监测</div>
-        <div class="step-content">
-          <div class="step-item">药物治疗</div>
-          <div class="step-item">非药物治疗</div>
-          <div class="step-item">随访和监测</div>
-          <div class="step-item">转诊<div class="step-item-details">(必要时)</div></div>
+      <section class="path-node">
+        <div class="path-dot"></div>
+        <div class="path-card">
+          <div class="path-step">STEP 5</div>
+          <h3 class="path-title">排除其他解释，综合判断后进入治疗与随访</h3>
+          <ul class="path-list">
+            <li>排除其他更适合解释症状的情况</li>
+            <li>综合病史、症状、功能损害后做出诊断</li>
+            <li>进入治疗、复诊与长期随访</li>
+          </ul>
         </div>
-      </div>
+      </section>
     </div>
 
-    <div class="flow-notes">注：ADHD为注意缺陷多动障碍; ICD-11为国际疾病分类第11版</div>
+    <div class="path-note">诊断不是只看“像不像”，而是结合病史、症状、功能损害和排除过程做出的综合判断。</div>
   </div>
 </body>
 </html>

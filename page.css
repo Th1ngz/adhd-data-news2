@@ -362,19 +362,40 @@ p {
   align-items: start;
 }
 
+#search-entry .section-head,
+#resonance .section-head,
+#boundaries .section-head {
+  margin-bottom: clamp(88px, 16vh, 180px);
+}
+
 .story-steps {
   display: grid;
-  gap: min(24vh, 220px);
-  padding-block: 14px 18vh;
+  gap: min(34vh, 320px);
+  padding-block: min(8vh, 88px) min(26vh, 260px);
 }
 
 .story-step {
   position: relative;
   max-width: 34rem;
+  min-height: min(38vh, 360px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding-left: 20px;
   opacity: 0.34;
   transform: translateY(16px);
   transition: opacity 0.3s ease, transform 0.5s ease;
+}
+
+.story-step--spacer {
+  min-height: min(36vh, 320px);
+  padding-left: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.story-step--spacer::before {
+  display: none;
 }
 
 .story-step::before {
@@ -433,25 +454,25 @@ p {
 
 .story-visual {
   position: sticky;
-  top: max(84px, 12vh);
-  min-height: 72vh;
+  top: max(94px, 15vh);
+  min-height: 74vh;
 }
 
 .story-visual-stage {
   position: relative;
-  min-height: clamp(480px, 64vh, 700px);
+  min-height: clamp(520px, 68vh, 760px);
 }
 
 #search-entry .story-visual-stage {
-  min-height: clamp(500px, 66vh, 640px);
+  min-height: clamp(520px, 70vh, 700px);
 }
 
 #resonance .story-visual-stage {
-  min-height: clamp(560px, 68vh, 700px);
+  min-height: clamp(580px, 72vh, 760px);
 }
 
 .story-visual-stage--tall {
-  min-height: clamp(620px, 74vh, 860px);
+  min-height: clamp(700px, 80vh, 980px);
 }
 
 .chart-panel {
@@ -816,25 +837,29 @@ p {
   line-height: 1.6;
 }
 
+.step-chart {
+  display: grid;
+  gap: 22px;
+}
+
 .step-chart-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 12px;
-  align-items: end;
-  min-height: 318px;
-  padding-top: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding-top: 8px;
 }
 
 .step-card {
+  min-height: 174px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: 12px;
-  padding: 18px 15px 16px;
-  border-radius: 22px 22px 10px 10px;
-  background: linear-gradient(180deg, rgba(225, 238, 255, 0.86), rgba(232, 211, 255, 0.88));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34), 0 16px 24px rgba(155, 171, 203, 0.08);
-  transform: translateY(30px);
+  padding: 18px 16px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(225, 238, 255, 0.82), rgba(232, 211, 255, 0.84));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34), 0 18px 26px rgba(155, 171, 203, 0.08);
+  transform: translateY(26px);
   opacity: 0;
   transition: transform 0.7s ease, opacity 0.55s ease;
 }
@@ -845,24 +870,48 @@ p {
 }
 
 .step-card:nth-child(odd) {
-  background: linear-gradient(180deg, rgba(232, 211, 255, 0.86), rgba(222, 236, 255, 0.86));
+  background: linear-gradient(180deg, rgba(232, 211, 255, 0.82), rgba(222, 236, 255, 0.82));
+}
+
+.step-percent {
+  color: #2a3c58;
+  font-size: clamp(1.86rem, 3vw, 2.46rem);
+  line-height: 1;
 }
 
 .step-stat {
-  color: #2f405d;
-  font-size: 0.94rem;
+  color: #738199;
+  font-size: 0.84rem;
+  letter-spacing: 0.03em;
 }
 
 .step-label {
   color: #304260;
-  font-size: 0.95rem;
-  line-height: 1.48;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.step-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px 18px;
 }
 
 .step-note {
-  color: #6e7c93;
-  font-size: 0.83rem;
-  line-height: 1.58;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: start;
+  color: #68778f;
+  font-size: 0.84rem;
+  line-height: 1.62;
+  padding-top: 12px;
+  border-top: 1px solid rgba(117, 137, 170, 0.12);
+}
+
+.step-note strong {
+  color: #304260;
+  font-weight: 600;
 }
 
 .matrix-chart {
@@ -1182,29 +1231,21 @@ p {
 }
 
 #diagnosis .story-shell {
-  width: min(100%, 1060px);
-  display: grid;
-  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
-  gap: clamp(24px, 4vw, 48px);
-  align-items: start;
+  width: min(100%, 1020px);
 }
 
 #diagnosis .embed-heading,
 #diagnosis .frame-figure {
   width: 100%;
-  margin: 0;
 }
 
 #medication .story-shell {
-  width: min(100%, 1060px);
-  display: grid;
-  grid-template-columns: minmax(250px, 0.82fr) minmax(0, 1.18fr);
-  gap: clamp(28px, 4vw, 54px);
-  align-items: start;
+  width: min(100%, 960px);
 }
 
 #medication .embed-heading,
-#medication .medication-art {
+#medication .medication-cards,
+#medication .medication-summary {
   width: 100%;
   margin: 0;
 }
@@ -1213,40 +1254,45 @@ p {
   margin-top: 28px;
 }
 
-.medication-art {
+.medication-cards {
   display: grid;
-  gap: 18px;
-}
-
-.medication-strip {
-  width: 100%;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
   margin-top: 8px;
 }
 
-.pill-figure {
-  display: grid;
-  grid-template-columns: 1fr;
-  justify-items: center;
-  align-content: start;
-  gap: 12px;
-  padding: 18px 16px;
+.medication-card {
+  min-height: 180px;
+  padding: 20px 18px 18px;
   border-radius: 24px;
-  text-align: center;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.2));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 18px 26px rgba(151, 170, 202, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.24));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34), 0 18px 26px rgba(151, 170, 202, 0.08);
 }
 
-.pill-figure img {
-  width: 86px;
-  filter: drop-shadow(0 10px 18px rgba(88, 104, 134, 0.12));
+.medication-card h3 {
+  color: #304260;
+  font-size: 1rem;
+  margin-bottom: 10px;
 }
 
-.pill-figure figcaption {
-  color: #5d6c82;
-  font-size: 0.94rem;
-  line-height: 1.65;
+.medication-card p {
+  color: #5b6b84;
+  font-size: 0.96rem;
+  line-height: 1.74;
+}
+
+.medication-card p + p {
+  margin-top: 0.72rem;
+}
+
+.medication-accent {
+  color: #304260;
+  font-weight: 600;
+}
+
+.medication-summary {
+  margin-top: 18px;
+  color: #5f6f88;
 }
 
 .frame-figure.is-types .auto-iframe {
@@ -1368,11 +1414,12 @@ p {
   }
 
   .story-steps {
-    gap: 26px;
-    padding: 6px 0 26px;
+    gap: 28px;
+    padding: 0;
   }
 
   .story-step {
+    min-height: auto;
     opacity: 1;
     transform: none;
   }
@@ -1380,6 +1427,10 @@ p {
   .story-step::before {
     height: calc(100% - 0.12rem);
     opacity: 0.7;
+  }
+
+  .story-step--spacer {
+    display: none;
   }
 
   .story-visual {
@@ -1437,6 +1488,10 @@ p {
     min-height: auto;
   }
 
+  .step-notes {
+    grid-template-columns: 1fr;
+  }
+
   .matrix-top {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1462,7 +1517,7 @@ p {
     row-gap: 28px;
   }
 
-  .medication-strip {
+  .medication-cards {
     grid-template-columns: 1fr;
   }
 }

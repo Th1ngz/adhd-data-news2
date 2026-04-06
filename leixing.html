@@ -7,9 +7,9 @@
   <style>
     :root {
       --ink: #314360;
-      --muted: #6a7890;
+      --muted: #6b7a91;
       --purple: rgba(232, 211, 255, 0.86);
-      --blue: rgba(222, 236, 255, 0.88);
+      --blue: rgba(222, 236, 255, 0.9);
     }
 
     * {
@@ -27,54 +27,52 @@
     .type-stage {
       position: relative;
       width: 100%;
-      min-height: 660px;
+      min-height: 700px;
+      padding: 26px 6px 38px;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: clamp(18px, 4vw, 42px);
-      padding: 28px 12px 46px;
+      gap: 18px;
       isolation: isolate;
     }
 
     .type-stage::before {
       content: "";
       position: absolute;
-      inset: 10% 4% 16%;
+      inset: 10% 6% 14%;
       background:
-        radial-gradient(circle at 28% 48%, rgba(232, 211, 255, 0.36), transparent 28%),
-        radial-gradient(circle at 72% 42%, rgba(222, 236, 255, 0.34), transparent 30%),
-        radial-gradient(circle at 50% 64%, rgba(255, 255, 255, 0.26), transparent 36%);
-      filter: blur(26px);
-      opacity: 0.9;
+        radial-gradient(circle at 28% 46%, rgba(222, 236, 255, 0.34), transparent 26%),
+        radial-gradient(circle at 72% 44%, rgba(232, 211, 255, 0.34), transparent 26%),
+        radial-gradient(circle at 50% 64%, rgba(255, 255, 255, 0.28), transparent 34%);
+      filter: blur(28px);
+      opacity: 0.92;
       pointer-events: none;
+    }
+
+    .type-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(22px, 4vw, 42px);
+      align-items: start;
     }
 
     .type-card {
       position: relative;
       min-height: 560px;
-      display: grid;
-      justify-items: center;
-      align-content: end;
-      padding: 0 10px 18px;
-      isolation: isolate;
+      padding: 18px 12px 20px;
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.14));
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.26);
     }
 
     .type-card::before {
       content: "";
       position: absolute;
-      inset: 14% 8% 18%;
+      inset: 14% 12% 18%;
       background:
-        radial-gradient(circle at 50% 52%, rgba(255, 255, 255, 0.42), transparent 46%),
-        radial-gradient(circle at 50% 50%, var(--halo), transparent 58%);
+        radial-gradient(circle at 50% 48%, var(--halo), transparent 58%);
       filter: blur(18px);
-      opacity: 0.66;
-      transition: opacity 0.35s ease, transform 0.35s ease;
-      transform: scale(0.96);
+      opacity: 0.88;
       z-index: -1;
-    }
-
-    .type-card.active::before {
-      opacity: 0.96;
-      transform: scale(1);
     }
 
     .type-card[data-type="nobita"] {
@@ -85,114 +83,88 @@
       --halo: rgba(232, 211, 255, 0.58);
     }
 
-    .figure-wrap {
+    .type-title {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-size: 0.96rem;
+      color: #33445f;
+      background: linear-gradient(90deg, rgba(222, 236, 255, 0.94), rgba(232, 211, 255, 0.84));
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.48);
+    }
+
+    .type-figure {
       position: relative;
-      width: min(100%, 360px);
-      min-height: 420px;
+      min-height: 474px;
       display: grid;
       place-items: center;
     }
 
-    .type-image {
-      width: min(100%, 248px);
-      height: auto;
+    .type-figure img {
+      width: min(100%, 238px);
       filter: drop-shadow(0 18px 24px rgba(104, 121, 151, 0.1));
-      transition: transform 0.45s ease;
     }
 
-    .type-card.active .type-image {
-      transform: translateY(-6px);
-    }
-
-    .feature-ring {
+    .bubble {
       position: absolute;
-      inset: 0;
-      pointer-events: none;
-    }
-
-    .feature-tip {
-      position: absolute;
-      max-width: 10em;
+      max-width: 8.8em;
       padding: 8px 12px;
       border-radius: 999px;
-      color: #50617b;
-      font-size: 0.91rem;
-      line-height: 1.4;
+      color: #53637b;
+      font-size: 0.9rem;
+      line-height: 1.45;
       text-align: center;
-      background: rgba(255, 255, 255, 0.5);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.54);
-      opacity: 0.22;
-      transform: translateY(10px) scale(0.94);
-      transition: opacity 0.35s ease, transform 0.35s ease;
+      background: rgba(255, 255, 255, 0.58);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.56);
       backdrop-filter: blur(8px);
     }
 
-    .type-card.active .feature-tip {
-      opacity: 1;
-      transform: none;
-    }
+    .n1 { left: 6%; top: 12%; }
+    .n2 { right: 5%; top: 15%; }
+    .n3 { left: 0; top: 46%; }
+    .n4 { right: 0; top: 49%; }
+    .n5 { left: 50%; bottom: 5%; transform: translateX(-50%); }
 
-    .p1 { left: 50%; top: 0%; transform: translate(-50%, 10px) scale(0.94); }
-    .p2 { right: -2%; top: 14%; }
-    .p3 { right: -10%; top: 38%; }
-    .p4 { right: -4%; top: 68%; }
-    .p5 { left: 50%; bottom: 4%; transform: translate(-50%, 10px) scale(0.94); }
-    .p6 { left: -4%; top: 68%; }
-    .p7 { left: -10%; top: 38%; }
-    .p8 { left: -2%; top: 14%; }
+    .f1 { left: 6%; top: 14%; }
+    .f2 { right: 6%; top: 12%; }
+    .f3 { left: 0; top: 47%; }
+    .f4 { right: 0; top: 48%; }
+    .f5 { left: 50%; bottom: 5%; transform: translateX(-50%); }
 
-    .type-label {
+    .type-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.7;
       margin-top: 10px;
-      padding: 8px 16px;
-      border-radius: 999px;
-      color: var(--ink);
-      background: linear-gradient(90deg, var(--blue), var(--purple));
-      font-size: 0.98rem;
-      letter-spacing: 0.02em;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.46);
+      text-align: center;
     }
 
     .mix-note {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translateX(-50%);
-      padding: 9px 14px;
+      position: relative;
+      width: min(100%, 560px);
+      margin: 0 auto;
+      padding: 10px 18px;
       border-radius: 999px;
+      text-align: center;
+      color: #566782;
+      font-size: 0.92rem;
       background: rgba(255, 255, 255, 0.52);
-      color: var(--muted);
-      font-size: 0.9rem;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.48);
     }
 
     @media (max-width: 860px) {
-      .type-stage {
+      .type-grid {
         grid-template-columns: 1fr;
-        min-height: 820px;
-        padding-top: 18px;
       }
 
       .type-card {
-        min-height: 420px;
+        min-height: 500px;
       }
 
-      .figure-wrap {
-        min-height: 360px;
-      }
-
-      .feature-tip {
-        max-width: 9em;
-        font-size: 0.86rem;
-      }
-
-      .p2,
-      .p8 {
-        top: 18%;
-      }
-
-      .p4,
-      .p6 {
-        top: 72%;
+      .type-figure {
+        min-height: 430px;
       }
     }
 
@@ -201,81 +173,58 @@
         padding-inline: 0;
       }
 
-      .figure-wrap {
-        width: min(100%, 320px);
+      .type-card {
+        padding-inline: 6px;
       }
 
-      .type-image {
-        width: min(100%, 198px);
+      .type-figure img {
+        width: min(100%, 188px);
       }
 
-      .feature-tip {
-        padding: 6px 9px;
-        font-size: 0.8rem;
+      .bubble {
+        max-width: 7.6em;
+        font-size: 0.82rem;
+        padding: 7px 10px;
       }
 
-      .p2 { right: 2%; }
-      .p3 { right: 0; }
-      .p4 { right: 2%; }
-      .p6 { left: 2%; }
-      .p7 { left: 0; }
-      .p8 { left: 2%; }
+      .n1, .f1 { left: 2%; }
+      .n2, .f2 { right: 2%; }
+      .n3, .f3 { left: 1%; }
+      .n4, .f4 { right: 1%; }
     }
   </style>
 </head>
 <body>
   <div class="type-stage">
-    <article class="type-card active" data-type="nobita">
-      <div class="figure-wrap">
-        <img src="nobita.png" alt="ADHD 注意力不足型" class="type-image" />
-        <div class="feature-ring">
-          <div class="feature-tip p1">很难注意事情的细节</div>
-          <div class="feature-tip p2">不容易专注在一件事情上</div>
-          <div class="feature-tip p3">不容易规划和组织任务</div>
-          <div class="feature-tip p4">会遗忘一些需要的物品</div>
-          <div class="feature-tip p5">在日常活动中比较健忘</div>
-          <div class="feature-tip p6">注意力持续短，容易分心</div>
-          <div class="feature-tip p7">不易处理结构性作业</div>
-          <div class="feature-tip p8">难以完成繁琐或需耐心的任务</div>
+    <div class="type-grid">
+      <article class="type-card" data-type="nobita">
+        <div class="type-title">注意力不足为主型</div>
+        <div class="type-figure">
+          <img src="nobita.png" alt="ADHD 注意力不足为主型" />
+          <div class="bubble n1">拖延启动困难</div>
+          <div class="bubble n2">容易分心走神</div>
+          <div class="bubble n3">时间感混乱</div>
+          <div class="bubble n4">常常丢三落四</div>
+          <div class="bubble n5">任务收尾困难</div>
         </div>
-      </div>
-      <div class="type-label">注意力不足为主型</div>
-    </article>
+        <p class="type-desc">外表不一定吵闹，但执行、整理和持续专注往往更吃力。</p>
+      </article>
 
-    <article class="type-card" data-type="fatty">
-      <div class="figure-wrap">
-        <img src="fatty.png" alt="ADHD 过动型" class="type-image" />
-        <div class="feature-ring">
-          <div class="feature-tip p1">没办法好好坐着</div>
-          <div class="feature-tip p2">在座位上坐立不安、动来动去</div>
-          <div class="feature-tip p3">会在不适当的时间点离开座位</div>
-          <div class="feature-tip p4">从事具风险性的事，不考虑后果</div>
-          <div class="feature-tip p5">时常活跃、精力充沛停不下来</div>
-          <div class="feature-tip p6">说话频率和时间比其他人多</div>
-          <div class="feature-tip p7">问题未说完就抢着说答案</div>
-          <div class="feature-tip p8">不易轮流等候，常常插嘴或打断别人</div>
+      <article class="type-card" data-type="fatty">
+        <div class="type-title">过动 / 冲动为主型</div>
+        <div class="type-figure">
+          <img src="fatty.png" alt="ADHD 过动冲动为主型" />
+          <div class="bubble f1">坐不住、停不下</div>
+          <div class="bubble f2">说话容易打断别人</div>
+          <div class="bubble f3">做事更冲动</div>
+          <div class="bubble f4">情绪反应更外显</div>
+          <div class="bubble f5">等待和克制更困难</div>
         </div>
-      </div>
-      <div class="type-label">过动为主型</div>
-    </article>
+        <p class="type-desc">问题更容易在语言、动作和情绪上直接暴露出来。</p>
+      </article>
+    </div>
 
-    <div class="mix-note">更多成年人呈现混合型特征</div>
+    <div class="mix-note">更多成年人会同时带有两类特征，只是在不同场景里表现轻重不同。</div>
   </div>
-
-  <script>
-    const cards = [...document.querySelectorAll(".type-card")];
-
-    function activateCard(target) {
-      cards.forEach((card) => {
-        card.classList.toggle("active", card === target);
-      });
-    }
-
-    cards.forEach((card) => {
-      card.addEventListener("mouseenter", () => activateCard(card));
-      card.addEventListener("click", () => activateCard(card));
-      card.addEventListener("touchstart", () => activateCard(card), { passive: true });
-    });
-  </script>
 </body>
 </html>

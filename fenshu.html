@@ -94,20 +94,19 @@
       margin-top: 28px;
     }
 
-    .hidden {
+    .form-shell {
       opacity: 0;
-      max-height: 0;
-      pointer-events: none;
-      overflow: hidden;
-      transition: opacity 0.4s ease, max-height 0.5s ease;
+      transform: translateY(18px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
     }
 
-    .fadein {
-      opacity: 1 !important;
-      max-height: 4000px !important;
-      pointer-events: auto;
-      overflow: visible;
-      transition: opacity 0.7s ease, max-height 1s ease;
+    .form-shell.is-hidden {
+      display: none;
+    }
+
+    .form-shell.is-visible {
+      opacity: 1;
+      transform: none;
     }
 
     .section-title {
@@ -206,17 +205,21 @@
         本工具基于世界卫生组织成人 ADHD 自填量表（ASRS），共 18 道题目。请根据你过去 6 个月的实际感受，选择每题的频率。完成后系统会自动计算分数，并根据评分标准给出参考建议。<br />
         <b>所有信息匿名，不会被存储。</b>
       </div>
-      <button class="start-btn" id="startBtn" onclick="showForm()">开始评测</button>
-      <form id="adhd-form" class="hidden">
+
+      <button class="start-btn" id="startBtn" type="button" onclick="showForm()">开始评测</button>
+
+      <form id="adhd-form" class="form-shell is-hidden">
         <div class="section-title">A部分：注意力不集中（1~9题）</div>
         <div id="questions-a"></div>
         <div class="section-title">B部分：过动/冲动（10~18题）</div>
         <div id="questions-b"></div>
         <button type="button" class="submit-btn" onclick="calculateScore()">提交并查看结果</button>
       </form>
+
       <div id="result" class="result"></div>
     </div>
   </div>
+
   <script>
     const questionsA = [
       "1. 当必须进行一件枯燥或困难的计划时，你会多常粗心犯错？",
@@ -250,15 +253,43 @@
       { label: "非常频繁", value: 4 }
     ];
 
+    function syncParentFrame() {
+      const frame = window.frameElement;
+      const height = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight
+      ) + 28;
+
+      if (frame) {
+        frame.style.height = `${height}px`;
+      }
+    }
+
+    function scrollParentToElement(element) {
+      if (!window.parent || !window.frameElement || !element) {
+        return;
+      }
+
+      const frameRect = window.frameElement.getBoundingClientRect();
+      const targetTop = window.parent.scrollY + frameRect.top + element.offsetTop - 28;
+      window.parent.scrollTo({
+        top: targetTop,
+        behavior: "smooth"
+      });
+    }
+
     function renderQuestions(containerId, questions, prefix) {
       const container = document.getElementById(containerId);
       container.innerHTML = "";
+
       questions.forEach((question, index) => {
         const questionIndex = `${prefix}${index + 1}`;
         let html = `<div class="question"><div class="question-title">${question}</div><div class="options">`;
+
         options.forEach((option) => {
           html += `<label><input type="radio" name="${questionIndex}" value="${option.value}">${option.label}</label>`;
         });
+
         html += "</div></div>";
         container.innerHTML += html;
       });
@@ -270,8 +301,14 @@
     function showForm() {
       document.getElementById("startBtn").style.display = "none";
       const form = document.getElementById("adhd-form");
-      form.classList.remove("hidden");
-      setTimeout(() => form.classList.add("fadein"), 30);
+      form.classList.remove("is-hidden");
+
+      window.requestAnimationFrame(() => {
+        form.classList.add("is-visible");
+        syncParentFrame();
+        const firstQuestion = document.querySelector(".question");
+        scrollParentToElement(firstQuestion);
+      });
     }
 
     function calculateScore() {
@@ -335,7 +372,17 @@
       const resultBox = document.getElementById("result");
       resultBox.innerHTML = message;
       resultBox.style.display = "block";
-      window.scrollTo({ top: resultBox.offsetTop - 30, behavior: "smooth" });
+      syncParentFrame();
+      scrollParentToElement(resultBox);
+    }
+
+    window.addEventListener("load", syncParentFrame);
+    window.addEventListener("resize", syncParentFrame);
+
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(() => syncParentFrame());
+      observer.observe(document.body);
+      observer.observe(document.documentElement);
     }
   </script>
 </body>
