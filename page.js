@@ -447,31 +447,87 @@ function renderStoryCharts() {
   renderRiskChart(data);
 }
 
+function getFrameBaseMinHeight(frame) {
+  const src = frame.getAttribute("src") || "";
+  if (src.includes("fenshu.html")) {
+    return 360;
+  }
+  if (src.includes("liuchengtu.html")) {
+    return 640;
+  }
+  if (src.includes("leixing.html")) {
+    return 640;
+  }
+  return 320;
+}
+
+function getFrameContentRoot(doc) {
+  if (!doc || !doc.body) {
+    return null;
+  }
+
+  return [...doc.body.children].find((node) => node.tagName !== "SCRIPT") || null;
+}
+
+function measureElementHeight(element, win) {
+  if (!element) {
+    return 0;
+  }
+
+  const styles = win.getComputedStyle(element);
+  const marginTop = parseFloat(styles.marginTop) || 0;
+  const marginBottom = parseFloat(styles.marginBottom) || 0;
+  const rectHeight = element.getBoundingClientRect().height || 0;
+  return Math.ceil(Math.max(element.scrollHeight || 0, element.offsetHeight || 0, rectHeight) + marginTop + marginBottom);
+}
+
+function getFrameDesiredHeight(frame, doc) {
+  const root = getFrameContentRoot(doc);
+  const rootHeight = measureElementHeight(root, doc.defaultView || window);
+  return Math.max(rootHeight, getFrameBaseMinHeight(frame));
+}
+
+function setFrameHeight(frame, height) {
+  frame.style.height = `${Math.max(height, getFrameBaseMinHeight(frame)) + 28}px`;
+}
+
 function observeFrame(frame) {
   try {
     const doc = frame.contentDocument || frame.contentWindow.document;
     const resize = () => {
-      const bodyHeight = doc.body ? doc.body.scrollHeight : 0;
-      const rootHeight = doc.documentElement ? doc.documentElement.scrollHeight : 0;
-      frame.style.height = `${Math.max(bodyHeight, rootHeight) + 28}px`;
+      setFrameHeight(frame, getFrameDesiredHeight(frame, doc));
     };
 
     resize();
 
-    if ("ResizeObserver" in window) {
+    if ("ResizeObserver" in window && doc.body) {
       const observer = new ResizeObserver(() => resize());
       observer.observe(doc.body);
       if (doc.documentElement) {
         observer.observe(doc.documentElement);
       }
       frame._observer = observer;
-    } else {
-      frame._poll = window.setInterval(resize, 500);
+    }
+
+    if ("MutationObserver" in window && doc.body) {
+      const mutationObserver = new MutationObserver(() => resize());
+      mutationObserver.observe(doc.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+      });
+      frame._mutationObserver = mutationObserver;
     }
 
     if (doc.fonts && doc.fonts.ready) {
       doc.fonts.ready.then(resize).catch(() => {});
     }
+
+    window.setTimeout(resize, 120);
+    window.setTimeout(resize, 420);
+    window.setTimeout(resize, 920);
+
   } catch (error) {
     console.warn("无法同步 iframe 高度", error);
   }
@@ -487,6 +543,26 @@ function initFrames() {
       observeFrame(frame);
     }
     frame.addEventListener("load", () => observeFrame(frame));
+  });
+}
+
+function initFrameMessages() {
+  window.addEventListener("message", (event) => {
+    const data = event.data;
+    if (!data || data.type !== "iframe-height" || typeof data.height !== "number") {
+      return;
+    }
+
+    const target = [...document.querySelectorAll("iframe.auto-iframe")].find((frame) => {
+      const src = frame.getAttribute("src") || "";
+      return frame.contentWindow === event.source || (data.source && src.includes(data.source));
+    });
+
+    if (!target) {
+      return;
+    }
+
+    setFrameHeight(target, data.height);
   });
 }
 
@@ -655,11 +731,216 @@ function initRealityMode() {
   window.addEventListener("resize", requestUpdate);
 }
 
+function restoreHashTarget() {
+  const hash = window.location.hash;
+  if (!hash) {
+    return;
+  }
+
+  let target = null;
+  try {
+    target = document.querySelector(hash);
+  } catch (error) {
+    return;
+  }
+
+  if (!target) {
+    return;
+  }
+
+  const scrollToTarget = () => {
+    target.scrollIntoView({ block: "start", behavior: "auto" });
+  };
+
+  window.setTimeout(scrollToTarget, 300);
+  window.setTimeout(scrollToTarget, 1200);
+  window.setTimeout(scrollToTarget, 2600);
+}
+
+const scaleQuestionsA = [
+  "1. 当必须进行一件枯燥或困难的计划时，你会多常粗心犯错？",
+  "2. 当正在做枯燥或重复性的工作时，你多常有持续专注的困难？",
+  "3. 即使有人直接对你说话，你会多常有困难专注于别人跟你讲话的内容？",
+  "4. 一旦完成任何计划中最具挑战的部分之后，你多常有完成计划最后细节的困难？",
+  "5. 当必须从事需要有组织规划性的任务时，你会多常有困难井然有序地去做？",
+  "6. 当有一件需要多费心思考的工作时，你会多常逃避或是延后开始去做？",
+  "7. 在家里或是在工作时，你会多常没有把东西放对地方或是找不到东西？",
+  "8. 你会多常因身旁的活动或声音而分心？",
+  "9. 你会多常有问题去记得约会或是必须要做的事？"
+];
+
+const scaleQuestionsB = [
+  "10. 当你必须长时间坐着时，你会多常坐不安稳或扭动手脚？",
+  "11. 你会多常在开会时或在其他被期待坐好的场合中离开座位？",
+  "12. 你会多常觉得静不下来或烦躁不安？",
+  "13. 当有自己独处的时间时，你会多常觉得有困难使自己平静和放松？",
+  "14. 你会多常像被马达所驱动一样，觉得自己过度地活跃，不得不做事情？",
+  "15. 在社交场合中，你会多常发现自己话讲得太多？",
+  "16. 当与他人交谈时，你会多常在别人还没把话讲完前就插嘴或接话替对方把话讲完？",
+  "17. 在需要轮流排队的场合时，你会多常有困难轮流等待？",
+  "18. 你会多常在别人忙碌时打断别人？"
+];
+
+const scaleOptions = [
+  { label: "从不", value: 0 },
+  { label: "很少", value: 1 },
+  { label: "有时", value: 2 },
+  { label: "常常", value: 3 },
+  { label: "非常频繁", value: 4 }
+];
+
+function renderScaleQuestions(container, questions, prefix) {
+  if (!container) {
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  questions.forEach((question, index) => {
+    const name = `${prefix}${index + 1}`;
+    const block = document.createElement("div");
+    block.className = "scale-question";
+
+    const title = document.createElement("div");
+    title.className = "scale-question-title";
+    title.textContent = question;
+
+    const options = document.createElement("div");
+    options.className = "scale-options";
+
+    scaleOptions.forEach((option) => {
+      const label = document.createElement("label");
+      label.className = "scale-option";
+
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = name;
+      input.value = String(option.value);
+
+      const text = document.createElement("span");
+      text.textContent = option.label;
+
+      appendChildren(label, [input, text]);
+      options.appendChild(label);
+    });
+
+    appendChildren(block, [title, options]);
+    fragment.appendChild(block);
+  });
+
+  container.innerHTML = "";
+  container.appendChild(fragment);
+}
+
+function scrollToScaleContent(target) {
+  if (!target) {
+    return;
+  }
+
+  const top = target.getBoundingClientRect().top + window.scrollY - 28;
+  window.scrollTo({
+    top: Math.max(top, 0),
+    behavior: "smooth"
+  });
+}
+
+function getScaleLevel(score) {
+  if (score <= 16) {
+    return "不太可能";
+  }
+  if (score <= 23) {
+    return "很可能";
+  }
+  return "非常可能";
+}
+
+function initScaleModule() {
+  const form = document.getElementById("scaleForm");
+  const startButton = document.getElementById("scaleStartBtn");
+  const submitButton = document.getElementById("scaleSubmitBtn");
+  const resultBox = document.getElementById("scaleResult");
+
+  if (!form || !startButton || !submitButton || !resultBox) {
+    return;
+  }
+
+  renderScaleQuestions(document.getElementById("scaleQuestionsA"), scaleQuestionsA, "A");
+  renderScaleQuestions(document.getElementById("scaleQuestionsB"), scaleQuestionsB, "B");
+
+  startButton.addEventListener("click", () => {
+    startButton.style.display = "none";
+    form.classList.remove("is-hidden");
+
+    window.requestAnimationFrame(() => {
+      form.classList.add("is-visible");
+      const firstQuestion = form.querySelector(".scale-question");
+      if (firstQuestion) {
+        scrollToScaleContent(firstQuestion);
+      }
+    });
+  });
+
+  submitButton.addEventListener("click", () => {
+    let aScore = 0;
+    let bScore = 0;
+
+    for (let index = 1; index <= 9; index += 1) {
+      const input = document.querySelector(`input[name="A${index}"]:checked`);
+      if (!input) {
+        window.alert("请完成所有题目再提交！");
+        return;
+      }
+      aScore += Number(input.value);
+    }
+
+    for (let index = 1; index <= 9; index += 1) {
+      const input = document.querySelector(`input[name="B${index}"]:checked`);
+      if (!input) {
+        window.alert("请完成所有题目再提交！");
+        return;
+      }
+      bScore += Number(input.value);
+    }
+
+    const total = aScore + bScore;
+    const levelA = getScaleLevel(aScore);
+    const levelB = getScaleLevel(bScore);
+    const levelT = getScaleLevel(total);
+    const levels = [levelA, levelB, levelT];
+
+    let finalLevel = "不太可能";
+    if (levels.includes("非常可能")) {
+      finalLevel = "非常可能";
+    } else if (levels.includes("很可能")) {
+      finalLevel = "很可能";
+    }
+
+    let message = `<div><strong>您的评分结果：</strong><br>A 部分：${aScore} / 36 （${levelA}）<br>B 部分：${bScore} / 36 （${levelB}）<br>总分：${total} / 72 （${levelT}）</div><br>`;
+
+    if (finalLevel === "不太可能") {
+      message += "<div>综合来看，目前量表得分处于较低区间，ADHD 特征不明显。若在日常生活或工作中偶有注意力波动、组织困难等感受，可继续关注自身体验，尝试调整生活方式或行为策略；若长期感到困扰，也可根据需要与专业人士沟通交流。</div>";
+    } else if (finalLevel === "很可能") {
+      message += "<div>综合来看，量表得分处于中等区间，存在一定与 ADHD 特征相关的表现。您可以在日常中留意这些特征对生活、学习或工作带来的影响，并酌情考虑与专业人士沟通，获取更详细评估或建议；同时，通过合理的自我管理策略、环境调整等方式进行尝试，也有助于改善体验。</div>";
+    } else {
+      message += "<div>综合来看，量表得分处于较高区间，可能存在明显的 ADHD 特征。建议您考虑积极寻求专业评估与支持，与医生或心理专家沟通，以了解更全面的状况并获得个性化建议或干预方案。同时，也可尝试结合生活习惯、工作/学习环境调整等方式，帮助提升注意力和执行功能。</div>";
+    }
+
+    message += "<br><div style='font-style:italic;color:#6a7890;'>* 该量表仅供自我参考，不作最终诊断；若您或他人对结果有疑虑，请以专业评估为准。</div>";
+
+    resultBox.innerHTML = message;
+    resultBox.style.display = "block";
+    scrollToScaleContent(resultBox);
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderStoryCharts();
+  initFrameMessages();
   initFrames();
   initReveal();
   initScrollyStories();
   initHeroDepth();
   initRealityMode();
+  initScaleModule();
+  restoreHashTarget();
 });

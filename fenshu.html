@@ -11,6 +11,12 @@
       padding: 0;
     }
 
+    html,
+    body {
+      overflow: visible;
+      min-height: auto;
+    }
+
     body {
       background: transparent;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
@@ -40,6 +46,7 @@
     .content {
       position: relative;
       z-index: 1;
+      overflow: visible;
     }
 
     h1 {
@@ -253,15 +260,46 @@
       { label: "非常频繁", value: 4 }
     ];
 
+    function getContentHeight() {
+      const container = document.querySelector(".container");
+      if (!container) {
+        return 360;
+      }
+
+      const styles = window.getComputedStyle(container);
+      const marginTop = parseFloat(styles.marginTop) || 0;
+      const marginBottom = parseFloat(styles.marginBottom) || 0;
+      const rectHeight = container.getBoundingClientRect().height || 0;
+      return Math.ceil(Math.max(container.scrollHeight, container.offsetHeight, rectHeight) + marginTop + marginBottom);
+    }
+
     function syncParentFrame() {
       const frame = window.frameElement;
-      const height = Math.max(
-        document.body.scrollHeight,
-        document.documentElement.scrollHeight
-      ) + 28;
+      const contentHeight = getContentHeight();
+      const height = Math.max(contentHeight, 360) + 28;
 
       if (frame) {
         frame.style.height = `${height}px`;
+      }
+
+      try {
+        if (window.parent && window.parent.document) {
+          const parentFrame = [...window.parent.document.querySelectorAll("iframe.auto-iframe")]
+            .find((item) => (item.getAttribute("src") || "").includes("fenshu.html"));
+          if (parentFrame) {
+            parentFrame.style.height = `${height}px`;
+          }
+        }
+      } catch (error) {
+        // ignore parent access issues
+      }
+
+      if (window.parent) {
+        window.parent.postMessage({
+          type: "iframe-height",
+          source: "fenshu.html",
+          height: height - 28
+        }, "*");
       }
     }
 
@@ -308,6 +346,10 @@
         syncParentFrame();
         const firstQuestion = document.querySelector(".question");
         scrollParentToElement(firstQuestion);
+        setTimeout(syncParentFrame, 120);
+        setTimeout(syncParentFrame, 420);
+        setTimeout(syncParentFrame, 900);
+        setTimeout(syncParentFrame, 1500);
       });
     }
 
@@ -374,15 +416,37 @@
       resultBox.style.display = "block";
       syncParentFrame();
       scrollParentToElement(resultBox);
+      setTimeout(syncParentFrame, 120);
+      setTimeout(syncParentFrame, 420);
+      setTimeout(syncParentFrame, 900);
     }
 
-    window.addEventListener("load", syncParentFrame);
+    window.addEventListener("load", () => {
+      syncParentFrame();
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("open") === "1") {
+        setTimeout(showForm, 60);
+      }
+    });
     window.addEventListener("resize", syncParentFrame);
 
     if ("ResizeObserver" in window) {
       const observer = new ResizeObserver(() => syncParentFrame());
-      observer.observe(document.body);
-      observer.observe(document.documentElement);
+      const container = document.querySelector(".container");
+      if (container) {
+        observer.observe(container);
+      }
+    }
+
+    if ("MutationObserver" in window) {
+      const observer = new MutationObserver(() => syncParentFrame());
+      const content = document.querySelector(".content") || document.body;
+      observer.observe(content, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true
+      });
     }
   </script>
 </body>

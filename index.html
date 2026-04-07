@@ -286,21 +286,6 @@
         </div>
       </section>
 
-      <section id="diagnosis" class="story-section tight reality-section">
-        <div class="story-shell reveal">
-          <div class="embed-heading">
-            <p>对很多人来说，从怀疑自己 ADHD 到拿到诊断报告，中间是一条充满阻碍的路。</p>
-            <p>如果你也在考虑走入医院，不妨先了解这条路径，知道自己可能面对哪些问诊、评估与判断。</p>
-          </div>
-          <figure class="frame-figure">
-            <div class="frame-wrap compact">
-              <iframe class="auto-iframe" src="./liuchengtu.html" title="成人 ADHD 诊疗流程图" scrolling="no" loading="lazy"></iframe>
-            </div>
-            <figcaption class="chart-source">数据来源：《中国成人注意缺陷多动障碍诊断和治疗专家共识（2023版）》</figcaption>
-          </figure>
-        </div>
-      </section>
-
       <section id="medication" class="story-section tight reality-section">
         <div class="story-shell reveal">
           <div class="embed-heading">
@@ -332,16 +317,48 @@
         </div>
       </section>
 
+      <section id="diagnosis" class="story-section tight reality-section">
+        <div class="story-shell reveal is-visible">
+          <div class="embed-heading">
+            <p>对很多人来说，从怀疑自己 ADHD 到拿到诊断报告，中间是一条充满阻碍的路。</p>
+            <p>如果你也在考虑走入医院，不妨先了解这条路径，知道自己可能面对哪些问诊、评估与判断。</p>
+          </div>
+          <figure class="frame-figure">
+            <div class="frame-wrap">
+              <iframe class="auto-iframe" src="./liuchengtu.html" title="成人 ADHD 诊疗流程图" scrolling="no" loading="lazy"></iframe>
+            </div>
+            <figcaption class="chart-source">数据来源：《中国成人注意缺陷多动障碍诊断和治疗专家共识（2023版）》</figcaption>
+          </figure>
+        </div>
+      </section>
+
       <section id="scale" class="story-section tight reality-section">
-        <div class="story-shell reveal">
+        <div class="story-shell reveal is-visible">
           <div class="embed-heading">
             <h2>如果你在这些描述里反复看见自己</h2>
             <p>如果你在这些描述里反复看见自己，也请记住：筛查不等于诊断。</p>
             <p>如果你已经看到这里，并在这份页面中看到自己的影子，不妨试着完成下面的成人 ADHD 自测量表（ASRS）。测评结果仅供参考，不作为诊断依据。<br />如果你的分数较高，建议进一步寻求专业医生的帮助。不要因为一张标签而否定自己，也不必害怕确诊会改变你的人生。ADHD 不该成为羞于启齿的秘密，而是值得被理解的真实存在。</p>
           </div>
           <figure class="frame-figure is-scale">
-            <div class="frame-wrap compact">
-              <iframe class="auto-iframe" src="./fenshu.html" title="成人 ADHD 自评量表" scrolling="no" loading="lazy"></iframe>
+            <div class="scale-module">
+              <div class="scale-module__content">
+                <h3 class="scale-module__title">成人 ADHD 自评量表（ASRS）</h3>
+                <div class="scale-module__desc">
+                  <p>本工具基于世界卫生组织成人 ADHD 自填量表（ASRS），共 18 道题目。请根据你过去 6 个月的实际感受，选择每题的频率。完成后系统会自动计算分数，并根据评分标准给出参考建议。</p>
+                  <p><strong>所有信息匿名，不会被存储。</strong></p>
+                </div>
+                <button type="button" class="scale-start-btn" id="scaleStartBtn">开始评测</button>
+
+                <form id="scaleForm" class="scale-form is-hidden">
+                  <div class="scale-section-title">A部分：注意力不集中（1~9题）</div>
+                  <div id="scaleQuestionsA"></div>
+                  <div class="scale-section-title">B部分：过动/冲动（10~18题）</div>
+                  <div id="scaleQuestionsB"></div>
+                  <button type="button" class="scale-submit-btn" id="scaleSubmitBtn">提交并查看结果</button>
+                </form>
+
+                <div id="scaleResult" class="scale-result"></div>
+              </div>
             </div>
             <figcaption class="chart-source">数据来源：WHO 成人 ADHD 自填量表（ASRS）</figcaption>
           </figure>

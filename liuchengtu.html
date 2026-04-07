@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>成人 ADHD 诊断路径带</title>
+  <title>成人 ADHD 诊断路径</title>
   <style>
     * {
       box-sizing: border-box;
@@ -11,228 +11,273 @@
       padding: 0;
     }
 
+    html,
     body {
       background: transparent;
-      min-height: auto;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 12px 8px 0;
-      color: #314360;
+      overflow: visible;
+    }
+
+    body {
+      padding: 6px 0 0;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      color: #314360;
     }
 
-    .path-wrap {
+    .flow-wrap {
       position: relative;
-      width: 100%;
-      max-width: 1000px;
-      padding-bottom: 10px;
+      width: min(100%, 960px);
+      margin: 0 auto;
+      padding: 10px 6px 18px;
     }
 
-    .path-wrap::before {
+    .flow-wrap::before {
       content: "";
       position: absolute;
-      inset: 10% 6% 16%;
+      inset: 8% 8% 10%;
       background:
-        radial-gradient(circle at 22% 42%, rgba(232, 211, 255, 0.24), transparent 24%),
-        radial-gradient(circle at 76% 56%, rgba(222, 236, 255, 0.28), transparent 28%);
+        radial-gradient(circle at 28% 22%, rgba(232, 211, 255, 0.2), transparent 24%),
+        radial-gradient(circle at 72% 44%, rgba(222, 236, 255, 0.22), transparent 28%);
       filter: blur(28px);
-      opacity: 0.88;
       pointer-events: none;
     }
 
-    .path-band {
+    .flow-track {
+      position: absolute;
+      left: 27px;
+      top: 18px;
+      bottom: 78px;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(207, 180, 244, 0.72), rgba(168, 200, 241, 0.76));
+      opacity: 0.72;
+    }
+
+    .flow-list {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      gap: 14px;
+      gap: 16px;
+    }
+
+    .flow-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 18px;
       align-items: start;
     }
 
-    .path-band::before {
-      content: "";
-      position: absolute;
-      left: 10%;
-      right: 10%;
-      top: 30px;
-      height: 10px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, rgba(232, 211, 255, 0.86), rgba(168, 200, 241, 0.78));
-      opacity: 0.72;
-      z-index: 0;
-    }
-
-    .path-node {
-      position: relative;
-      z-index: 1;
-      padding-top: 18px;
-    }
-
-    .path-dot {
-      width: 24px;
-      height: 24px;
-      margin: 0 auto 14px;
+    .flow-dot {
+      width: 18px;
+      height: 18px;
+      margin: 18px 0 0 18px;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.96);
-      box-shadow:
-        0 0 0 6px rgba(255, 255, 255, 0.22),
-        0 0 0 1px rgba(207, 180, 244, 0.44);
+      border: 1px solid rgba(207, 180, 244, 0.46);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
     }
 
-    .path-card {
-      min-height: 260px;
-      padding: 16px 16px 18px;
+    .flow-card {
+      padding: 16px 18px 16px 18px;
       border-radius: 22px;
       background: rgba(255, 255, 255, 0.4);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.36);
-      backdrop-filter: blur(8px);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34);
     }
 
-    .path-step {
+    .flow-step-index {
       color: #7a8aa0;
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
+      font-size: 0.76rem;
+      letter-spacing: 0.14em;
       margin-bottom: 6px;
     }
 
-    .path-title {
+    .flow-title {
       color: #304260;
       font-size: 1rem;
-      line-height: 1.45;
+      line-height: 1.52;
       margin-bottom: 10px;
     }
 
-    .path-list {
+    .flow-listing {
       display: grid;
       gap: 8px;
     }
 
-    .path-list li {
+    .flow-listing li {
+      list-style: none;
       position: relative;
       padding-left: 14px;
-      list-style: none;
-      color: #5b6b84;
-      font-size: 0.88rem;
-      line-height: 1.6;
+      color: #5a6b85;
+      font-size: 0.9rem;
+      line-height: 1.68;
     }
 
-    .path-list li::before {
+    .flow-listing li::before {
       content: "";
       position: absolute;
       left: 0;
-      top: 0.58em;
+      top: 0.62em;
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: rgba(168, 200, 241, 0.92);
     }
 
-    .path-note {
+    .flow-note {
+      position: relative;
       margin-top: 16px;
+      padding-left: 56px;
       color: #76859b;
-      font-size: 0.84rem;
-      text-align: center;
+      font-size: 0.85rem;
+      line-height: 1.7;
     }
 
-    @media (max-width: 920px) {
-      .path-band {
-        grid-template-columns: 1fr;
+    @media (max-width: 640px) {
+      .flow-wrap {
+        padding-inline: 0;
       }
 
-      .path-band::before {
-        left: 30px;
-        right: auto;
-        top: 34px;
-        bottom: 38px;
-        width: 10px;
-        height: auto;
+      .flow-step {
+        gap: 14px;
       }
 
-      .path-node {
-        padding-top: 0;
-        padding-left: 38px;
+      .flow-card {
+        padding: 15px 14px;
       }
 
-      .path-dot {
-        position: absolute;
-        left: 0;
-        top: 22px;
-        margin: 0;
-      }
-
-      .path-card {
-        min-height: auto;
+      .flow-note {
+        padding-left: 48px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="path-wrap">
-    <div class="path-band">
-      <section class="path-node">
-        <div class="path-dot"></div>
-        <div class="path-card">
-          <div class="path-step">STEP 1</div>
-          <h3 class="path-title">怀疑自己存在长期困扰</h3>
-          <ul class="path-list">
-            <li>分心、拖延、情绪起伏等问题长期反复出现</li>
-            <li>困扰不是一时状态，而是已经持续影响日常</li>
+  <div class="flow-wrap">
+    <div class="flow-track" aria-hidden="true"></div>
+
+    <div class="flow-list">
+      <section class="flow-step">
+        <div class="flow-dot"></div>
+        <div class="flow-card">
+          <div class="flow-step-index">STEP 1</div>
+          <h3 class="flow-title">长期困扰反复出现，并已影响日常生活</h3>
+          <ul class="flow-listing">
+            <li>分心、拖延、冲动、情绪起伏等问题长期存在</li>
+            <li>这些困扰已经影响学习、工作或生活安排</li>
           </ul>
         </div>
       </section>
 
-      <section class="path-node">
-        <div class="path-dot"></div>
-        <div class="path-card">
-          <div class="path-step">STEP 2</div>
-          <h3 class="path-title">进入精神专科 / 心理专科门诊</h3>
-          <ul class="path-list">
+      <section class="flow-step">
+        <div class="flow-dot"></div>
+        <div class="flow-card">
+          <div class="flow-step-index">STEP 2</div>
+          <h3 class="flow-title">进入精神专科 / 心理专科门诊</h3>
+          <ul class="flow-listing">
             <li>由医生接诊，了解主要困扰与求诊原因</li>
-            <li>初步判断是否需要进一步做 ADHD 方向评估</li>
+            <li>初步判断是否需要进行 ADHD 方向评估</li>
           </ul>
         </div>
       </section>
 
-      <section class="path-node">
-        <div class="path-dot"></div>
-        <div class="path-card">
-          <div class="path-step">STEP 3</div>
-          <h3 class="path-title">病史采集与症状评估</h3>
-          <ul class="path-list">
+      <section class="flow-step">
+        <div class="flow-dot"></div>
+        <div class="flow-card">
+          <div class="flow-step-index">STEP 3</div>
+          <h3 class="flow-title">病史采集与症状评估</h3>
+          <ul class="flow-listing">
             <li>回顾儿童 / 青少年时期表现</li>
             <li>了解既往史、家族史</li>
-            <li>评估 ADHD 核心症状与共病情况</li>
+            <li>评估 ADHD 核心症状和共病情况</li>
           </ul>
         </div>
       </section>
 
-      <section class="path-node">
-        <div class="path-dot"></div>
-        <div class="path-card">
-          <div class="path-step">STEP 4</div>
-          <h3 class="path-title">功能损害与辅助评估</h3>
-          <ul class="path-list">
+      <section class="flow-step">
+        <div class="flow-dot"></div>
+        <div class="flow-card">
+          <div class="flow-step-index">STEP 4</div>
+          <h3 class="flow-title">功能损害判断与辅助评估</h3>
+          <ul class="flow-listing">
             <li>判断学习、工作、家庭、人际是否受到影响</li>
             <li>必要时辅以心理测评 / 量表</li>
+            <li>排除其他更适合解释症状的情况</li>
           </ul>
         </div>
       </section>
 
-      <section class="path-node">
-        <div class="path-dot"></div>
-        <div class="path-card">
-          <div class="path-step">STEP 5</div>
-          <h3 class="path-title">排除其他解释，综合判断后进入治疗与随访</h3>
-          <ul class="path-list">
-            <li>排除其他更适合解释症状的情况</li>
-            <li>综合病史、症状、功能损害后做出诊断</li>
-            <li>进入治疗、复诊与长期随访</li>
+      <section class="flow-step">
+        <div class="flow-dot"></div>
+        <div class="flow-card">
+          <div class="flow-step-index">STEP 5</div>
+          <h3 class="flow-title">综合判断后做出诊断，进入治疗与随访</h3>
+          <ul class="flow-listing">
+            <li>结合病史、症状、功能损害做综合判断</li>
+            <li>明确诊断后进入治疗、复诊与长期随访</li>
           </ul>
         </div>
       </section>
     </div>
 
-    <div class="path-note">诊断不是只看“像不像”，而是结合病史、症状、功能损害和排除过程做出的综合判断。</div>
+    <div class="flow-note">诊断不是只看“像不像”，而是结合病史、症状、功能损害和排除过程做出的综合判断。</div>
   </div>
+
+  <script>
+    function getContentHeight() {
+      const wrap = document.querySelector(".flow-wrap");
+      if (!wrap) {
+        return 640;
+      }
+
+      const styles = window.getComputedStyle(wrap);
+      const marginTop = parseFloat(styles.marginTop) || 0;
+      const marginBottom = parseFloat(styles.marginBottom) || 0;
+      const rectHeight = wrap.getBoundingClientRect().height || 0;
+      return Math.ceil(Math.max(wrap.scrollHeight, wrap.offsetHeight, rectHeight) + marginTop + marginBottom);
+    }
+
+    function syncParentHeight() {
+      const height = Math.max(getContentHeight(), 640);
+
+      if (window.frameElement) {
+        window.frameElement.style.height = `${height + 28}px`;
+      }
+
+      try {
+        if (window.parent && window.parent.document) {
+          const parentFrame = [...window.parent.document.querySelectorAll("iframe.auto-iframe")]
+            .find((item) => (item.getAttribute("src") || "").includes("liuchengtu.html"));
+          if (parentFrame) {
+            parentFrame.style.height = `${height + 28}px`;
+          }
+        }
+      } catch (error) {
+        // ignore parent access issues
+      }
+
+      if (window.parent) {
+        window.parent.postMessage({
+          type: "iframe-height",
+          source: "liuchengtu.html",
+          height
+        }, "*");
+      }
+    }
+
+    window.addEventListener("load", () => {
+      syncParentHeight();
+      setTimeout(syncParentHeight, 120);
+      setTimeout(syncParentHeight, 420);
+      setTimeout(syncParentHeight, 900);
+    });
+
+    window.addEventListener("resize", syncParentHeight);
+
+    if ("ResizeObserver" in window) {
+      const observer = new ResizeObserver(() => syncParentHeight());
+      const wrap = document.querySelector(".flow-wrap");
+      if (wrap) {
+        observer.observe(wrap);
+      }
+    }
+  </script>
 </body>
 </html>
