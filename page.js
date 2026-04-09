@@ -676,32 +676,138 @@ function initScrollyStories() {
   window.addEventListener("resize", requestUpdate);
 }
 
-function initHeroDepth() {
+function splitHeroTitle() {
+  const title = document.querySelector("#hero .hero-title");
+  if (!title) {
+    return [];
+  }
+
+  if (title.dataset.split === "true") {
+    return [...title.querySelectorAll(".hero-title__char")];
+  }
+
+  const chars = [];
+  title.querySelectorAll(".hero-title__line").forEach((line) => {
+    const text = line.textContent || "";
+    line.setAttribute("aria-hidden", "true");
+    line.textContent = "";
+
+    [...text].forEach((char) => {
+      const span = document.createElement("span");
+      span.className = "hero-title__char";
+      if (char === " ") {
+        span.classList.add("is-space");
+        span.innerHTML = "&nbsp;";
+      } else {
+        span.textContent = char;
+      }
+      line.appendChild(span);
+      chars.push(span);
+    });
+  });
+
+  title.dataset.split = "true";
+  return chars;
+}
+
+function initHeroMotion() {
   const hero = document.getElementById("hero");
-  if (!hero || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  if (!hero) {
     return;
   }
 
-  let ticking = false;
-  const update = () => {
-    ticking = false;
-    const rect = hero.getBoundingClientRect();
-    const progress = Math.min(Math.max((window.innerHeight - rect.top) / (window.innerHeight + rect.height), 0), 1);
-    const shift = Math.round((progress - 0.34) * 34);
-    hero.style.setProperty("--hero-shift", `${shift}px`);
-  };
+  const titleLines = [...hero.querySelectorAll(".hero-title__line")];
+  const paper = hero.querySelector(".hero-paper");
+  const paperFrame = hero.querySelector(".hero-paper__frame");
+  const ornaments = [...hero.querySelectorAll(".hero-paper__oval, .hero-paper__underline")];
+  const subtitle = hero.querySelector(".hero-subtitle");
+  const lead = hero.querySelector(".hero-lead");
+  const introParagraphs = [...hero.querySelectorAll(".hero-intro p")];
+  const figure = hero.querySelector(".hero-figure__image");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const hasGsap = typeof window.gsap !== "undefined";
 
-  const requestUpdate = () => {
-    if (ticking) {
-      return;
+  if (!hasGsap || prefersReducedMotion || !paper || !figure || !subtitle || !lead || !introParagraphs.length) {
+    hero.classList.add("is-static");
+    return;
+  }
+
+  const gsap = window.gsap;
+  if (window.ScrollTrigger && typeof gsap.registerPlugin === "function") {
+    gsap.registerPlugin(window.ScrollTrigger);
+  }
+
+  gsap.set(paper, { opacity: 0.9, y: 22, rotate: -1.4, scale: 0.986 });
+  gsap.set(titleLines, { opacity: 0, y: 18, rotate: 1.2, transformOrigin: "0% 100%" });
+  gsap.set(subtitle, { opacity: 0, y: 14 });
+  gsap.set(lead, { opacity: 0, y: 16 });
+  gsap.set(introParagraphs, { opacity: 0, y: 18 });
+  gsap.set(figure, { opacity: 0.58, x: 28, scale: 1.04, filter: "blur(4px)" });
+  gsap.set(ornaments, { opacity: 0, scale: 0.92, transformOrigin: "50% 50%" });
+
+  if (paperFrame) {
+    gsap.set(paperFrame, { opacity: 0.02 });
+  }
+
+  const timeline = gsap.timeline({
+    defaults: {
+      ease: "power2.out"
     }
-    ticking = true;
-    window.requestAnimationFrame(update);
+  });
+
+  timeline
+    .to(figure, { opacity: 0.94, x: 0, scale: 1, filter: "blur(0px)", duration: 1.06 }, 0.02)
+    .to(paper, { opacity: 1, y: 0, rotate: 0, scale: 1, duration: 0.86 }, 0.12)
+    .to(paperFrame, { opacity: 0.1, duration: 0.7 }, 0.3)
+    .to(titleLines, { opacity: 1, y: 0, rotate: 0, duration: 0.58, stagger: 0.08, ease: "power3.out" }, 0.34)
+    .to(subtitle, { opacity: 1, y: 0, duration: 0.56 }, 0.82)
+    .to(lead, { opacity: 1, y: 0, duration: 0.5 }, 0.92)
+    .to(ornaments, {
+      opacity: (index) => (index === 0 ? 0.12 : 0.24),
+      scale: 1,
+      duration: 0.7,
+      stagger: 0.1
+    }, 0.9)
+    .to(introParagraphs, { opacity: 1, y: 0, duration: 0.62, stagger: 0.12 }, 1.06)
+    .to(ornaments, {
+      opacity: (index) => (index === 0 ? 0.12 : 0.24),
+      duration: 0.01
+    }, 1.02);
+
+  gsap.to(paper, { y: -5, rotate: -0.35, duration: 5.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
+  gsap.to(figure, { y: -10, x: -4, duration: 7.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
+
+  if (!window.ScrollTrigger) {
+    return;
+  }
+
+  const scrollSettings = {
+    trigger: hero,
+    start: "top top",
+    end: "bottom top",
+    scrub: 0.8
   };
 
-  update();
-  window.addEventListener("scroll", requestUpdate, { passive: true });
-  window.addEventListener("resize", requestUpdate);
+  gsap.to(hero.querySelector(".hero-stage"), {
+    yPercent: -4,
+    ease: "none",
+    scrollTrigger: scrollSettings
+  });
+
+  gsap.to(paper, {
+    yPercent: -5,
+    rotate: -0.8,
+    ease: "none",
+    scrollTrigger: { ...scrollSettings }
+  });
+
+  gsap.to(figure, {
+    yPercent: -10,
+    opacity: 0.84,
+    scale: 1.03,
+    ease: "none",
+    scrollTrigger: { ...scrollSettings }
+  });
 }
 
 function initRealityMode() {
@@ -939,7 +1045,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFrames();
   initReveal();
   initScrollyStories();
-  initHeroDepth();
+  initHeroMotion();
   initRealityMode();
   initScaleModule();
   restoreHashTarget();

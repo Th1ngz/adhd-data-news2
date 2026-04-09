@@ -9,17 +9,38 @@
 <body>
   <div class="page-shell">
     <section id="hero" class="hero story-section">
-      <div class="hero-scene" aria-hidden="true"></div>
-      <img src="./butterfly.png" alt="" class="hero-butterfly" loading="lazy" />
+      <div class="hero-atmosphere" aria-hidden="true">
+        <div class="hero-floaters">
+          <img src="./素材/图标/butterfly_1.png" alt="" class="hero-floater hero-floater--mid" loading="lazy" />
+          <img src="./素材/图标/butterfly_2.png" alt="" class="hero-floater hero-floater--top" loading="lazy" />
+        </div>
+      </div>
       <div class="story-shell">
-        <div class="hero-copy reveal">
-          <h1>人人都像 ADHD？</h1>
-          <p class="hero-subtitle">平台热议、现实失诊，与中国成人 ADHD 的双重困境</p>
-          <div class="hero-intro">
-            <p>在互联网上，ADHD 正变得越来越常见。</p>
-            <p>拖延、分心、情绪失控、做事难以启动，越来越多人开始用这个词解释自己长期的生活困扰。短视频、图文笔记、经验分享、量表截图，把成人 ADHD 推到了公共讨论的前台。对一些人来说，这是一种终于找到解释的释然；但对另一些人来说，它也可能是一种被过快套用的标签。</p>
-            <p>问题也就出现在这里：一边，ADHD 在平台上被频繁谈论，甚至成了一种流行的自我解释；另一边，现实中的成人 ADHD 患者，却仍然面临识别不足、误诊漏诊、就医困难和长期被误解的处境。</p>
-            <p>为什么 ADHD 一边在网络上被反复提起，一边在现实中又仍然难以被准确识别和规范诊疗？</p>
+        <div class="hero-stage">
+          <div class="hero-paper">
+            <img src="./素材/铅笔描边1.png" alt="" class="hero-paper__frame" aria-hidden="true" loading="lazy" />
+            <span class="hero-paper__butterfly" aria-hidden="true">
+              <img src="./素材/图标/butterfly_4.png" alt="" class="hero-paper__butterfly-image" loading="lazy" />
+            </span>
+            <img src="./素材/图标/blue_oval_circle1.png" alt="" class="hero-paper__oval" aria-hidden="true" loading="lazy" />
+            <img src="./素材/图标/blue_scribble_underline1.png" alt="" class="hero-paper__underline" aria-hidden="true" loading="lazy" />
+            <div class="hero-paper__content">
+              <h1 class="hero-title" aria-label="人人都像 ADHD？">
+                <span class="hero-title__line">人人都像</span>
+                <span class="hero-title__line">ADHD？</span>
+              </h1>
+              <p class="hero-subtitle">平台热议、现实失诊，与中国成人 ADHD 的双重困境</p>
+              <p class="hero-lead">在互联网上，ADHD 正变得越来越常见。</p>
+              <div class="hero-intro">
+                <p>拖延、分心、情绪失控、做事难以启动，越来越多人开始用这个词解释自己长期的生活困扰。短视频、图文笔记、经验分享、量表截图，把成人 ADHD 推到了公共讨论的前台。对一些人来说，这是一种终于找到解释的释然；但对另一些人来说，它也可能是一种被过快套用的标签。</p>
+                <p>问题也就出现在这里：一边，ADHD 在平台上被频繁谈论，甚至成了一种流行的自我解释；另一边，现实中的成人 ADHD 患者，却仍然面临识别不足、误诊漏诊、就医困难和长期被误解的处境。</p>
+                <p>为什么 ADHD 一边在网络上被反复提起，一边在现实中又仍然难以被准确识别和规范诊疗？</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-figure" aria-hidden="true">
+            <img src="./素材/书架女性.png" alt="" class="hero-figure__image" loading="lazy" />
           </div>
         </div>
       </div>
@@ -379,6 +400,8 @@
   </div>
 
   <script src="./data/xhs_adhd_data.js"></script>
+  <script src="./vendor/gsap.min.js"></script>
+  <script src="./vendor/ScrollTrigger.min.js"></script>
   <script src="./page.js"></script>
 </body>
 </html>
