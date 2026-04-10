@@ -341,70 +341,130 @@ function renderMatrixChart(data) {
   const lookup = Object.fromEntries(
     data.matrixStats.map((item) => [`${item.resonance}-${item.boundary}`, item])
   );
-
-  const notes = {
-    "低共鸣-低边界": "内容不太会迅速让人代入，也少提供清楚的边界。",
-    "高共鸣-低边界": "最容易被迅速认领，却没有同步补足临床边界。",
-    "低共鸣-高边界": "共鸣感不强，但能把判断交还给专业评估。",
-    "高共鸣-高边界": "既能照见困扰，也会提醒读者不要直接自我诊断。"
+  const quadrantOrder = [
+    ["低共鸣", "高边界"],
+    ["高共鸣", "高边界"],
+    ["低共鸣", "低边界"],
+    ["高共鸣", "低边界"]
+  ];
+  const positionMap = {
+    "低共鸣-高边界": {
+      labelClass: "is-top-left",
+      bubbleClass: "is-top-left",
+      left: 27,
+      top: 29
+    },
+    "高共鸣-高边界": {
+      labelClass: "is-top-right",
+      bubbleClass: "is-top-right",
+      left: 73,
+      top: 29
+    },
+    "低共鸣-低边界": {
+      labelClass: "is-bottom-left",
+      bubbleClass: "is-bottom-left",
+      left: 27,
+      top: 69
+    },
+    "高共鸣-低边界": {
+      labelClass: "is-bottom-right",
+      bubbleClass: "is-bottom-right",
+      left: 73,
+      top: 69
+    }
   };
+  const maxCount = Math.max(...data.matrixStats.map((item) => item.count));
+  const scaleBubble = (count) => 70 + Math.sqrt(count / maxCount) * 78;
 
   const wrapper = document.createElement("div");
   wrapper.className = "matrix-chart";
 
-  const topLabels = document.createElement("div");
-  topLabels.className = "matrix-top";
-  topLabels.innerHTML = "<span></span><span>低共鸣</span><span>高共鸣</span>";
+  const shell = document.createElement("div");
+  shell.className = "matrix-shell";
 
-  const side = document.createElement("div");
-  side.className = "matrix-side";
-  side.innerHTML = "<span>低边界</span><span>高边界</span>";
+  const topRow = document.createElement("div");
+  topRow.className = "matrix-top-row";
 
-  const grid = document.createElement("div");
-  grid.className = "matrix-grid";
+  const topSpacer = document.createElement("div");
+  topSpacer.className = "matrix-top-spacer";
 
+  const topAxis = document.createElement("div");
+  topAxis.className = "matrix-axis matrix-axis--top";
+  topAxis.innerHTML = "<span>低共鸣</span><span>高共鸣</span>";
+
+  appendChildren(topRow, [topSpacer, topAxis]);
+
+  const frame = document.createElement("div");
+  frame.className = "matrix-frame";
+
+  const sideAxis = document.createElement("div");
+  sideAxis.className = "matrix-axis matrix-axis--left";
+  sideAxis.innerHTML = "<span>高边界</span><span>低边界</span>";
+
+  const plot = document.createElement("div");
+  plot.className = "matrix-plot";
+
+  const panes = document.createElement("div");
+  panes.className = "matrix-panes";
   [
-    ["低共鸣", "低边界"],
-    ["高共鸣", "低边界"],
-    ["低共鸣", "高边界"],
-    ["高共鸣", "高边界"]
-  ].forEach(([resonance, boundary]) => {
-    const item = lookup[`${resonance}-${boundary}`];
-    const cell = document.createElement("div");
-    cell.className = "matrix-cell";
-    if (resonance === "高共鸣" && boundary === "低边界") {
-      cell.classList.add("is-emphasis");
-    }
-
-    const title = document.createElement("div");
-    title.className = "matrix-cell-title";
-    title.textContent = `${resonance} · ${boundary}`;
-
-    const count = document.createElement("div");
-    count.className = "matrix-count";
-    count.textContent = item.count;
-
-    const meta = document.createElement("div");
-    meta.className = "matrix-meta";
-    meta.textContent = formatPercent(item.percent);
-
-    const note = document.createElement("div");
-    note.className = "matrix-note";
-    note.textContent = notes[`${resonance}-${boundary}`];
-
-    appendChildren(cell, [title, count, meta, note]);
-    grid.appendChild(cell);
+    "is-top-left",
+    "is-top-right",
+    "is-bottom-left",
+    "is-bottom-right"
+  ].forEach((className) => {
+    const pane = document.createElement("span");
+    pane.className = `matrix-pane ${className}`;
+    panes.appendChild(pane);
   });
 
-  const gridWrap = document.createElement("div");
-  gridWrap.className = "matrix-grid-wrap";
-  appendChildren(gridWrap, [side, grid]);
+  plot.appendChild(panes);
+
+  quadrantOrder.forEach(([resonance, boundary]) => {
+    const key = `${resonance}-${boundary}`;
+    const item = lookup[key];
+    if (!item) {
+      return;
+    }
+
+    const config = positionMap[key];
+    const node = document.createElement("div");
+    node.className = `matrix-node ${config.labelClass}`;
+    if (key === "高共鸣-低边界") {
+      node.classList.add("is-emphasis");
+    }
+    node.style.left = `${config.left}%`;
+    node.style.top = `${config.top}%`;
+
+    const size = scaleBubble(item.count);
+    node.style.setProperty("--bubble-size", `${size.toFixed(1)}px`);
+
+    const bubble = document.createElement("div");
+    bubble.className = `matrix-bubble ${config.bubbleClass}`;
+    if (key === "高共鸣-低边界") {
+      bubble.classList.add("is-emphasis");
+    }
+
+    const count = document.createElement("strong");
+    count.className = "matrix-bubble-count";
+    count.textContent = `${item.count} 条`;
+
+    const meta = document.createElement("span");
+    meta.className = "matrix-bubble-meta";
+    meta.textContent = formatPercent(item.percent);
+
+    appendChildren(bubble, [count, meta]);
+    node.appendChild(bubble);
+    plot.appendChild(node);
+  });
+
+  appendChildren(frame, [sideAxis, plot]);
 
   const caption = document.createElement("p");
   caption.className = "matrix-caption";
-  caption.textContent = "横向比较代入强度，纵向比较是否给出边界提醒。";
+  caption.textContent = "每个象限用一个气泡表示，气泡大小代表该象限样本量；横向比较代入强度，纵向比较是否给出边界提醒。";
 
-  appendChildren(wrapper, [topLabels, gridWrap, caption]);
+  appendChildren(shell, [topRow, frame]);
+  appendChildren(wrapper, [shell, caption]);
   host.innerHTML = "";
   host.appendChild(wrapper);
 }
