@@ -15,6 +15,10 @@
   --frame: 940px;
   --wide: 1140px;
   --text: 720px;
+  --afterstory-shell: 1100px;
+  --afterstory-text: 800px;
+  --afterstory-figure: 1030px;
+  --afterstory-gap: clamp(30px, 4vw, 54px);
   --radius-xl: 34px;
   --radius-lg: 24px;
   --radius-md: 18px;
@@ -1705,7 +1709,9 @@ p {
 .bridge-block {
   position: relative;
   display: grid;
-  gap: 30px;
+  width: min(100%, var(--afterstory-text));
+  gap: 26px;
+  margin: 0 auto;
 }
 
 .bridge-block::before {
@@ -1719,36 +1725,28 @@ p {
 }
 
 .bridge-lead {
-  padding-left: 0;
+  padding-left: 18px;
   margin-bottom: 0;
-  max-width: 14em;
-  font-size: clamp(1.8rem, 3.2vw, 2.68rem);
-  line-height: 1.4;
+  max-width: 15em;
+  font-size: clamp(1.82rem, 2.9vw, 2.46rem);
+  line-height: 1.34;
   letter-spacing: 0.015em;
   color: #30435f;
 }
 
 .bridge-lead::before {
-  content: none;
+  content: "";
 }
 
 .bridge-copy {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 110px;
-  gap: 34px;
-  align-items: end;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: start;
 }
 
 .bridge-copy p {
-  max-width: 44rem;
-}
-
-.bridge-art {
-  justify-self: end;
-  width: 94px;
-  opacity: 0.74;
-  filter: drop-shadow(0 14px 20px rgba(101, 118, 146, 0.1));
-  animation: butterflyFloat 11s ease-in-out infinite;
+  max-width: none;
 }
 
 .reality-section {
@@ -1802,38 +1800,83 @@ p {
   background: transparent;
 }
 
+#reality-bridge .story-shell,
 #types .story-shell,
 #voices .story-shell,
 #help .story-shell,
 #hospitals .story-shell,
-#scale .story-shell {
-  width: min(100%, 1100px);
+#medication .story-shell,
+#diagnosis .story-shell,
+#scale .story-shell,
+.references-section .story-shell,
+.footer .story-shell {
+  width: min(100%, var(--afterstory-shell));
+}
+
+#reality-bridge .bridge-block,
+#types .embed-heading,
+#voices .embed-heading,
+#help .embed-heading,
+#hospitals .embed-heading,
+#medication .embed-heading,
+#diagnosis .embed-heading,
+#scale .embed-heading,
+.references-section .section-head,
+.references-list,
+.footer .story-shell > * {
+  width: min(100%, var(--afterstory-text));
+  margin-inline: auto;
+}
+
+#types .embed-heading p,
+#voices .embed-heading p,
+#help .embed-heading p,
+#hospitals .embed-heading p,
+#medication .embed-heading p,
+#diagnosis .embed-heading p,
+#scale .embed-heading p,
+.footer .story-shell p {
+  max-width: none;
 }
 
 #types .frame-figure,
 #voices .frame-figure,
-#hospitals .frame-figure {
-  width: min(100%, 1000px);
-}
-
-#help .embed-heading,
 #help .frame-figure,
-#scale .embed-heading,
-#scale .frame-figure,
-#scale .scale-note {
-  width: min(100%, 960px);
+#hospitals .frame-figure,
+#diagnosis .frame-figure {
+  width: min(100%, var(--afterstory-figure));
+  margin-inline: auto;
 }
 
-#hospitals .embed-heading,
-#hospitals .frame-figure {
-  width: min(100%, 1030px);
+#medication .medication-cards {
+  width: min(100%, var(--afterstory-figure));
+  margin-inline: auto;
+}
+
+#scale .frame-figure {
+  width: min(100%, 860px);
+  margin-inline: auto;
+}
+
+#scale .scale-note {
+  width: min(100%, 860px);
+  margin-inline: auto;
+}
+
+#types .frame-figure::before,
+#voices .frame-figure::before,
+#help .frame-figure::before,
+#hospitals .frame-figure::before,
+#diagnosis .frame-figure::before,
+#scale .frame-figure::before {
+  content: none;
 }
 
 #comorbidity .story-shell {
-  width: min(100%, 1060px);
+  width: min(100%, var(--afterstory-shell));
   display: grid;
-  grid-template-columns: minmax(240px, 0.74fr) minmax(0, 1.26fr);
-  gap: clamp(26px, 5vw, 56px);
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+  gap: var(--afterstory-gap);
   align-items: center;
 }
 
@@ -1843,37 +1886,43 @@ p {
   margin: 0;
 }
 
-#diagnosis .story-shell {
-  width: min(100%, 1020px);
+#comorbidity .embed-heading p {
+  max-width: none;
 }
 
-#diagnosis .embed-heading,
-#diagnosis .frame-figure {
-  width: 100%;
+#comorbidity .frame-figure::before {
+  content: none;
 }
 
-#medication .story-shell {
-  width: min(100%, 960px);
-}
-
+#types .embed-heading,
+#voices .embed-heading,
+#help .embed-heading,
+#hospitals .embed-heading,
 #medication .embed-heading,
-#medication .medication-cards,
-#medication .medication-summary {
+#diagnosis .embed-heading,
+#scale .embed-heading {
+  margin-bottom: clamp(28px, 4vw, 38px);
+}
+
+#types .frame-figure .chart-source,
+#voices .frame-figure .chart-source,
+#help .frame-figure .chart-source,
+#hospitals .frame-figure .chart-source,
+#diagnosis .frame-figure .chart-source,
+#scale .frame-figure .chart-source {
   width: 100%;
-  margin: 0;
+  margin-top: 16px;
 }
 
 .scale-note {
   margin-top: 28px;
 }
 
-.references-section .story-shell {
-  width: min(100%, var(--frame));
+.references-section {
+  padding-bottom: 26px;
 }
 
 .references-list {
-  width: min(100%, var(--frame));
-  margin: 0 auto;
   padding-left: 1.4rem;
   color: #5a6b85;
 }
@@ -1893,8 +1942,8 @@ p {
 
 .scale-module {
   position: relative;
-  max-width: 820px;
-  margin: 14px auto 0;
+  max-width: none;
+  margin: 0;
   padding: 18px 18px 30px;
   --worksheet-margin: 18px;
   --worksheet-rule-gap: 34px;
@@ -2135,16 +2184,17 @@ p {
 .medication-cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin-top: 8px;
+  gap: 18px;
+  margin-top: 0;
+  grid-auto-rows: 1fr;
 }
 
 .medication-card {
-  min-height: 180px;
-  padding: 20px 18px 18px;
+  min-height: 210px;
+  padding: 22px 20px 18px;
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.24));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34), 0 18px 26px rgba(151, 170, 202, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(248, 251, 255, 0.14));
+  box-shadow: inset 0 0 0 1px rgba(206, 219, 239, 0.72);
 }
 
 .medication-card h3 {
@@ -2155,8 +2205,8 @@ p {
 
 .medication-card p {
   color: #5b6b84;
-  font-size: 0.96rem;
-  line-height: 1.74;
+  font-size: 0.94rem;
+  line-height: 1.78;
 }
 
 .medication-card p + p {
@@ -2230,7 +2280,7 @@ p {
 
 .footer {
   position: relative;
-  padding: 56px 24px 86px;
+  padding: 30px 24px 72px;
 }
 
 .footer::before {
@@ -2243,7 +2293,7 @@ p {
 }
 
 .footer .story-shell {
-  width: min(100%, var(--frame));
+  width: min(100%, var(--afterstory-shell));
 }
 
 .footer p {
