@@ -356,12 +356,20 @@
           <figure class="frame-figure is-scale">
             <div class="scale-module">
               <div class="scale-module__content">
-                <h3 class="scale-module__title">成人 ADHD 自评量表（ASRS）</h3>
-                <div class="scale-module__desc">
-                  <p>本工具基于世界卫生组织成人 ADHD 自填量表（ASRS），共 18 道题目。请根据你过去 6 个月的实际感受，选择每题的频率。完成后系统会自动计算分数，并根据评分标准给出参考建议。</p>
-                  <p><strong>所有信息匿名，不会被存储。</strong></p>
+                <div class="scale-module__card">
+                  <div class="scale-module__header">
+                    <span class="scale-module__eyebrow">筛查工具</span>
+                    <h3 class="scale-module__title">成人 ADHD 自评量表（ASRS）</h3>
+                    <p class="scale-module__summary">基于 WHO 成人 ADHD 自填量表，共 18 道题</p>
+                  </div>
+                  <div class="scale-module__desc">
+                    <p>本工具基于世界卫生组织成人 ADHD 自填量表（ASRS），共 18 道题目。请根据你过去 6 个月的实际感受，选择每题的频率。完成后系统会自动计算分数，并根据评分标准给出参考建议。</p>
+                  </div>
+                  <div class="scale-module__actions">
+                    <button type="button" class="scale-start-btn" id="scaleStartBtn">开始评测</button>
+                    <p class="scale-module__privacy">所有信息匿名，不会被存储。</p>
+                  </div>
                 </div>
-                <button type="button" class="scale-start-btn" id="scaleStartBtn">开始评测</button>
 
                 <form id="scaleForm" class="scale-form is-hidden">
                   <div class="scale-section-title">A部分：注意力不集中（1~9题）</div>
