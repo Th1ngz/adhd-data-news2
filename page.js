@@ -247,16 +247,15 @@ function renderBoundaryChart(data) {
     return;
   }
 
-  const chart = document.createElement("div");
-  chart.className = "step-chart";
+  const items = [...data.boundaryCoverageStats].sort((left, right) => right.percent - left.percent);
+  const maxPercent = Math.max(...items.map((item) => item.percent));
+  const domainMax = Math.max(60, Math.ceil(maxPercent / 10) * 10);
 
   const explanations = {
-    "是否提到功能损害": "有没有明确说到这些表现已经影响了生活。",
-    "是否提到早发性": "有没有提醒问题通常从更早的时候就开始了。",
-    "是否提到持续性": "有没有说明这不是短暂的一阵子，而是长期存在。",
-    "是否提到跨情境性": "有没有指出困扰会跨学习、工作、关系等场景出现。",
-    "是否建议寻求专业评估/医院就诊": "有没有把判断交还给医院或专业评估。",
-    "是否提醒不要互联网诊断": "有没有明确划出网络内容不能代替诊断的边界。"
+    "是否提到功能损害": "明确提到对学业、工作、关系、生活造成实际损害",
+    "是否提到早发性": "提到相关问题通常从小存在、不是成年后突然出现",
+    "是否提到持续性": "提到问题长期、持续存在，而非偶发",
+    "是否提到跨情境性": "提到问题在学习、工作、家庭、人际等多个场景都存在"
   };
 
   const labelMap = {
@@ -268,40 +267,67 @@ function renderBoundaryChart(data) {
     "是否提醒不要互联网诊断": "提醒不要互联网诊断"
   };
 
-  const grid = document.createElement("div");
-  grid.className = "step-chart-grid";
+  const chart = document.createElement("div");
+  chart.className = "boundary-coverage-chart";
 
-  data.boundaryCoverageStats.forEach((item) => {
-    const card = document.createElement("article");
-    card.className = "step-card";
+  const scale = document.createElement("div");
+  scale.className = "boundary-scale";
 
-    const percent = document.createElement("div");
-    percent.className = "step-percent";
-    percent.textContent = formatPercent(item.percent);
+  const tickStep = domainMax <= 60 ? 20 : 25;
+  for (let tick = 0; tick <= domainMax; tick += tickStep) {
+    const label = document.createElement("span");
+    label.textContent = `${tick}%`;
+    scale.appendChild(label);
+  }
 
-    const stat = document.createElement("div");
-    stat.className = "step-stat";
-    stat.textContent = `${item.count} 条内容`;
+  const rows = document.createElement("div");
+  rows.className = "boundary-rows";
+
+  items.forEach((item, index) => {
+    const row = document.createElement("article");
+    row.className = "boundary-row";
+    if (index === 0) {
+      row.classList.add("is-leading");
+    }
+
+    const head = document.createElement("div");
+    head.className = "boundary-row-head";
 
     const label = document.createElement("div");
-    label.className = "step-label";
+    label.className = "boundary-row-label";
     label.textContent = labelMap[item.label] || item.label;
 
-    appendChildren(card, [percent, stat, label]);
-    grid.appendChild(card);
+    const meta = document.createElement("div");
+    meta.className = "boundary-row-meta";
+    meta.textContent = `${item.count} 条 · ${formatPercent(item.percent)}`;
+
+    appendChildren(head, [label, meta]);
+
+    const track = document.createElement("div");
+    track.className = "boundary-row-track";
+
+    const fill = document.createElement("div");
+    fill.className = "boundary-row-fill";
+    fill.style.width = `${Math.max((item.percent / domainMax) * 100, 4)}%`;
+
+    track.appendChild(fill);
+    appendChildren(row, [head, track]);
+    rows.appendChild(row);
   });
 
   const notes = document.createElement("div");
-  notes.className = "step-notes";
+  notes.className = "boundary-notes";
 
-  data.boundaryCoverageStats.forEach((item) => {
+  items
+    .filter((item) => explanations[item.label])
+    .forEach((item) => {
     const note = document.createElement("div");
-    note.className = "step-note";
+    note.className = "boundary-note";
     note.innerHTML = `<strong>${labelMap[item.label] || item.label}</strong><span>${explanations[item.label] || ""}</span>`;
     notes.appendChild(note);
-  });
+    });
 
-  appendChildren(chart, [grid, notes]);
+  appendChildren(chart, [scale, rows, notes]);
   host.innerHTML = "";
   host.appendChild(chart);
 }
