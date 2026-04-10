@@ -1002,14 +1002,15 @@ p {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 20px;
-  align-items: end;
+  align-items: start;
   padding-top: 10px;
 }
 
 .pillar-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-rows: minmax(2.6em, auto) auto minmax(3.2em, auto);
+  justify-items: center;
+  align-items: start;
   gap: 12px;
 }
 
@@ -1018,6 +1019,7 @@ p {
   font-size: 0.9rem;
   text-align: center;
   min-height: 2.6em;
+  width: 100%;
 }
 
 .pillar-track {
@@ -1031,6 +1033,21 @@ p {
 }
 
 .pillar-track::after {
+  content: none;
+}
+
+.pillar-fill {
+  position: relative;
+  width: 100%;
+  border-radius: 28px 28px 16px 16px;
+  background: linear-gradient(180deg, rgba(232, 211, 255, 1), rgba(168, 200, 241, 0.85));
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.32), 0 16px 26px rgba(149, 169, 203, 0.12);
+  transform-origin: bottom center;
+  transform: scaleY(0.18);
+  transition: transform 0.8s cubic-bezier(0.2, 0.75, 0.2, 1);
+}
+
+.pillar-fill::after {
   content: "";
   position: absolute;
   left: 18%;
@@ -1039,16 +1056,6 @@ p {
   height: 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.4);
-}
-
-.pillar-fill {
-  width: 100%;
-  border-radius: 28px 28px 16px 16px;
-  background: linear-gradient(180deg, rgba(232, 211, 255, 1), rgba(168, 200, 241, 0.85));
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.32), 0 16px 26px rgba(149, 169, 203, 0.12);
-  transform-origin: bottom center;
-  transform: scaleY(0.18);
-  transition: transform 0.8s cubic-bezier(0.2, 0.75, 0.2, 1);
 }
 
 .chart-panel.is-active .pillar-fill {
@@ -1060,6 +1067,8 @@ p {
   font-size: 0.92rem;
   text-align: center;
   line-height: 1.6;
+  width: 100%;
+  min-height: 3.2em;
 }
 
 .step-chart {
