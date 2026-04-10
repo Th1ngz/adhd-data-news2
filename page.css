@@ -1367,6 +1367,8 @@ p {
   z-index: 1;
   pointer-events: none;
   background: rgba(118, 135, 166, 0.2);
+  opacity: 0;
+  transition: transform 0.6s cubic-bezier(0.2, 0.72, 0.2, 1), opacity 0.42s ease;
 }
 
 .matrix-plot::before {
@@ -1374,7 +1376,8 @@ p {
   bottom: 9%;
   left: 50%;
   width: 1px;
-  transform: translateX(-50%);
+  transform: translateX(-50%) scaleY(0.24);
+  transform-origin: center;
 }
 
 .matrix-plot::after {
@@ -1382,12 +1385,29 @@ p {
   right: 9%;
   top: 50%;
   height: 1px;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scaleX(0.24);
+  transform-origin: center;
+}
+
+.chart-panel.is-active .matrix-plot::before {
+  opacity: 1;
+  transform: translateX(-50%) scaleY(1);
+}
+
+.chart-panel.is-active .matrix-plot::after {
+  opacity: 1;
+  transform: translateY(-50%) scaleX(1);
 }
 
 .matrix-panes {
   position: absolute;
   inset: 0;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.12s;
+}
+
+.chart-panel.is-active .matrix-panes {
+  opacity: 1;
 }
 
 .matrix-pane {
@@ -1433,6 +1453,11 @@ p {
 .chart-panel.is-active .matrix-node {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
+  animation: matrixNodeFloat var(--matrix-float-duration, 7.2s) ease-in-out var(--matrix-float-delay, 0.42s) infinite;
+}
+
+.matrix-node:hover {
+  z-index: 4;
 }
 
 .matrix-bubble {
@@ -1447,9 +1472,49 @@ p {
   place-content: center;
   gap: 4px;
   text-align: center;
+  overflow: visible;
   box-shadow:
     0 14px 30px rgba(129, 144, 178, 0.12),
     inset 0 0 0 1px rgba(255, 255, 255, 0.42);
+}
+
+.matrix-bubble::before,
+.matrix-bubble::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  pointer-events: none;
+}
+
+.matrix-bubble::before {
+  width: calc(var(--bubble-size) + 18px);
+  height: calc(var(--bubble-size) + 18px);
+  border-radius: 999px;
+  transform: translate(-50%, -50%) scale(0.94);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.06) 52%, transparent 74%);
+  opacity: 0.46;
+}
+
+.chart-panel.is-active .matrix-bubble::before {
+  animation: matrixHaloPulse 4.8s ease-in-out infinite;
+}
+
+.matrix-bubble::after {
+  width: var(--orbit-size, 8px);
+  height: var(--orbit-size, 8px);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow:
+    0 0 0 4px rgba(255, 255, 255, 0.16),
+    0 0 18px rgba(255, 255, 255, 0.28);
+  transform: translate(-50%, -50%) rotate(var(--orbit-start, 0deg)) translateX(calc(var(--bubble-size) * 0.54));
+  opacity: 0;
+}
+
+.chart-panel.is-active .matrix-bubble::after {
+  opacity: 0.92;
+  animation: matrixOrbit var(--orbit-duration, 10s) linear var(--orbit-delay, 0s) infinite;
 }
 
 .matrix-bubble.is-top-left {
@@ -1474,6 +1539,11 @@ p {
     inset 0 0 0 1px rgba(211, 183, 247, 0.44);
 }
 
+.matrix-node:hover .matrix-bubble,
+.matrix-bubble.is-emphasis {
+  filter: saturate(1.03) brightness(1.02);
+}
+
 .matrix-bubble-count {
   color: #304260;
   font-size: clamp(1rem, calc(var(--bubble-size) / 5.8), 1.88rem);
@@ -1488,6 +1558,59 @@ p {
 
 .matrix-caption {
   text-align: center;
+}
+
+@keyframes matrixNodeFloat {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  50% {
+    transform: translate(-50%, calc(-50% - 8px)) scale(1.02);
+  }
+}
+
+@keyframes matrixHaloPulse {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: translate(-50%, -50%) scale(0.94);
+  }
+
+  50% {
+    opacity: 0.56;
+    transform: translate(-50%, -50%) scale(1.04);
+  }
+}
+
+@keyframes matrixOrbit {
+  0% {
+    transform: translate(-50%, -50%) rotate(var(--orbit-start, 0deg)) translateX(calc(var(--bubble-size) * 0.54)) scale(0.94);
+  }
+
+  50% {
+    transform: translate(-50%, -50%) rotate(calc(var(--orbit-start, 0deg) + 180deg)) translateX(calc(var(--bubble-size) * 0.57)) scale(1.08);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) rotate(calc(var(--orbit-start, 0deg) + 360deg)) translateX(calc(var(--bubble-size) * 0.54)) scale(0.94);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .matrix-node,
+  .matrix-bubble::before,
+  .matrix-bubble::after {
+    animation: none !important;
+  }
+
+  .matrix-plot::before,
+  .matrix-plot::after,
+  .matrix-panes,
+  .matrix-node {
+    transition: none !important;
+  }
 }
 
 .risk-float-chart {

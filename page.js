@@ -419,7 +419,7 @@ function renderMatrixChart(data) {
 
   plot.appendChild(panes);
 
-  quadrantOrder.forEach(([resonance, boundary]) => {
+  quadrantOrder.forEach(([resonance, boundary], quadrantIndex) => {
     const key = `${resonance}-${boundary}`;
     const item = lookup[key];
     if (!item) {
@@ -434,6 +434,8 @@ function renderMatrixChart(data) {
     }
     node.style.left = `${config.left}%`;
     node.style.top = `${config.top}%`;
+    node.style.setProperty("--matrix-float-duration", `${(6.6 + quadrantIndex * 0.7).toFixed(1)}s`);
+    node.style.setProperty("--matrix-float-delay", `${(0.42 + quadrantIndex * 0.12).toFixed(2)}s`);
 
     const size = scaleBubble(item.count);
     node.style.setProperty("--bubble-size", `${size.toFixed(1)}px`);
@@ -443,6 +445,10 @@ function renderMatrixChart(data) {
     if (key === "高共鸣-低边界") {
       bubble.classList.add("is-emphasis");
     }
+    bubble.style.setProperty("--orbit-duration", `${(9.4 + quadrantIndex * 1.15).toFixed(1)}s`);
+    bubble.style.setProperty("--orbit-delay", `${(-1.4 * quadrantIndex).toFixed(2)}s`);
+    bubble.style.setProperty("--orbit-start", `${48 + quadrantIndex * 74}deg`);
+    bubble.style.setProperty("--orbit-size", key === "高共鸣-低边界" ? "10px" : "8px");
 
     const count = document.createElement("strong");
     count.className = "matrix-bubble-count";
