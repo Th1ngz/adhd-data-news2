@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>成人 ADHD 诊断路径</title>
+  <title>成人 ADHD 诊疗流程图</title>
   <style>
     * {
       box-sizing: border-box;
@@ -18,220 +18,217 @@
     }
 
     body {
-      padding: 6px 0 0;
-      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      min-height: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 12px 8px 0;
       color: #314360;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
     }
 
-    .flow-wrap {
+    .flow-container {
       position: relative;
-      width: min(100%, 960px);
-      margin: 0 auto;
-      padding: 10px 6px 18px;
+      width: 100%;
+      max-width: 1000px;
+      padding-bottom: 10px;
     }
 
-    .flow-wrap::before {
+    .flow-container::before {
       content: "";
       position: absolute;
-      inset: 8% 8% 10%;
+      inset: 12% 8% 20%;
       background:
-        radial-gradient(circle at 28% 22%, rgba(232, 211, 255, 0.2), transparent 24%),
-        radial-gradient(circle at 72% 44%, rgba(222, 236, 255, 0.22), transparent 28%);
+        radial-gradient(circle at 24% 46%, rgba(232, 211, 255, 0.24), transparent 24%),
+        radial-gradient(circle at 72% 42%, rgba(222, 236, 255, 0.28), transparent 28%);
       filter: blur(28px);
+      opacity: 0.88;
       pointer-events: none;
     }
 
-    .flow-track {
-      position: absolute;
-      left: 27px;
-      top: 18px;
-      bottom: 78px;
-      width: 2px;
-      background: linear-gradient(180deg, rgba(207, 180, 244, 0.72), rgba(168, 200, 241, 0.76));
-      opacity: 0.72;
-    }
-
-    .flow-list {
+    .flow-steps {
       position: relative;
       display: grid;
-      gap: 16px;
-    }
-
-    .flow-step {
-      position: relative;
-      display: grid;
-      grid-template-columns: 38px minmax(0, 1fr);
-      gap: 18px;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
       align-items: start;
     }
 
-    .flow-dot {
-      width: 18px;
-      height: 18px;
-      margin: 18px 0 0 18px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.96);
-      border: 1px solid rgba(207, 180, 244, 0.46);
-      box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.2);
+    .flow-steps::before {
+      content: "";
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      top: 36px;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(207, 180, 244, 0.52), rgba(168, 200, 241, 0.46));
+      z-index: 0;
     }
 
-    .flow-card {
-      padding: 16px 18px 16px 18px;
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.4);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34);
-    }
-
-    .flow-step-index {
-      color: #7a8aa0;
-      font-size: 0.76rem;
-      letter-spacing: 0.14em;
-      margin-bottom: 6px;
-    }
-
-    .flow-title {
-      color: #304260;
-      font-size: 1rem;
-      line-height: 1.52;
-      margin-bottom: 10px;
-    }
-
-    .flow-listing {
-      display: grid;
-      gap: 8px;
-    }
-
-    .flow-listing li {
-      list-style: none;
+    .step {
       position: relative;
-      padding-left: 14px;
-      color: #5a6b85;
-      font-size: 0.9rem;
-      line-height: 1.68;
+      z-index: 1;
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.34);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.34);
+      backdrop-filter: blur(8px);
     }
 
-    .flow-listing li::before {
+    .step-header {
+      position: relative;
+      padding: 14px 14px 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: center;
+      color: #2e405e;
+    }
+
+    .step-header::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -10px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.22);
+    }
+
+    .step-content {
+      padding: 16px 15px 18px;
+      border-top: 1px solid rgba(117, 137, 170, 0.1);
+    }
+
+    .step-item {
+      position: relative;
+      padding: 7px 0 7px 18px;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      color: #50617b;
+    }
+
+    .step-item::before {
       content: "";
       position: absolute;
       left: 0;
-      top: 0.62em;
-      width: 6px;
-      height: 6px;
+      top: 14px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: rgba(168, 200, 241, 0.92);
+      background: rgba(168, 200, 241, 0.9);
     }
 
-    .flow-note {
-      position: relative;
-      margin-top: 16px;
-      padding-left: 56px;
-      color: #76859b;
-      font-size: 0.85rem;
-      line-height: 1.7;
+    .step-item-details {
+      color: #73829a;
+      font-size: 0.8rem;
+      margin-top: 4px;
     }
 
-    @media (max-width: 640px) {
-      .flow-wrap {
+    .step-1 .step-header { background: rgba(232, 211, 255, 0.88); }
+    .step-2 .step-header { background: rgba(214, 225, 255, 0.9); }
+    .step-3 .step-header { background: rgba(222, 236, 255, 0.92); }
+    .step-4 .step-header { background: rgba(198, 207, 255, 0.84); }
+    .step-5 .step-header { background: rgba(176, 208, 255, 0.84); }
+
+    .flow-notes {
+      margin-top: 18px;
+      text-align: center;
+      color: #7b8a9f;
+      font-size: 0.84rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 860px) {
+      body {
         padding-inline: 0;
       }
 
-      .flow-step {
-        gap: 14px;
+      .flow-steps {
+        grid-template-columns: 1fr;
       }
 
-      .flow-card {
-        padding: 15px 14px;
+      .flow-steps::before {
+        display: none;
       }
 
-      .flow-note {
-        padding-left: 48px;
+      .step-header::after {
+        display: none;
       }
     }
   </style>
 </head>
 <body>
-  <div class="flow-wrap">
-    <div class="flow-track" aria-hidden="true"></div>
-
-    <div class="flow-list">
-      <section class="flow-step">
-        <div class="flow-dot"></div>
-        <div class="flow-card">
-          <div class="flow-step-index">STEP 1</div>
-          <h3 class="flow-title">长期困扰反复出现，并已影响日常生活</h3>
-          <ul class="flow-listing">
-            <li>分心、拖延、冲动、情绪起伏等问题长期存在</li>
-            <li>这些困扰已经影响学习、工作或生活安排</li>
-          </ul>
+  <div class="flow-container">
+    <div class="flow-steps">
+      <div class="step step-1">
+        <div class="step-header">病史采集</div>
+        <div class="step-content">
+          <div class="step-item">儿童/成年期</div>
+          <div class="step-item">症状确定(ADHD/共病)</div>
+          <div class="step-item">病程确定</div>
+          <div class="step-item">功能损害<div class="step-item-details">学习、个人生活、家庭、职业功能</div></div>
+          <div class="step-item">个人史/既往史/家族史</div>
         </div>
-      </section>
+      </div>
 
-      <section class="flow-step">
-        <div class="flow-dot"></div>
-        <div class="flow-card">
-          <div class="flow-step-index">STEP 2</div>
-          <h3 class="flow-title">进入精神专科 / 心理专科门诊</h3>
-          <ul class="flow-listing">
-            <li>由医生接诊，了解主要困扰与求诊原因</li>
-            <li>初步判断是否需要进行 ADHD 方向评估</li>
-          </ul>
+      <div class="step step-2">
+        <div class="step-header">心理测评</div>
+        <div class="step-content">
+          <div class="step-item">ADHD症状评定量表</div>
+          <div class="step-item">执行功能评估</div>
+          <div class="step-item">常见共病症状评估</div>
         </div>
-      </section>
+      </div>
 
-      <section class="flow-step">
-        <div class="flow-dot"></div>
-        <div class="flow-card">
-          <div class="flow-step-index">STEP 3</div>
-          <h3 class="flow-title">病史采集与症状评估</h3>
-          <ul class="flow-listing">
-            <li>回顾儿童 / 青少年时期表现</li>
-            <li>了解既往史、家族史</li>
-            <li>评估 ADHD 核心症状和共病情况</li>
-          </ul>
+      <div class="step step-3">
+        <div class="step-header">常规与辅助检查</div>
+        <div class="step-content">
+          <div class="step-item">体格检查</div>
+          <div class="step-item">实验室检查</div>
+          <div class="step-item">脑电图和神经影像<div class="step-item-details">(必要时)</div></div>
         </div>
-      </section>
+      </div>
 
-      <section class="flow-step">
-        <div class="flow-dot"></div>
-        <div class="flow-card">
-          <div class="flow-step-index">STEP 4</div>
-          <h3 class="flow-title">功能损害判断与辅助评估</h3>
-          <ul class="flow-listing">
-            <li>判断学习、工作、家庭、人际是否受到影响</li>
-            <li>必要时辅以心理测评 / 量表</li>
-            <li>排除其他更适合解释症状的情况</li>
-          </ul>
+      <div class="step step-4">
+        <div class="step-header">诊断</div>
+        <div class="step-content">
+          <div class="step-item">ICD-11诊断标准</div>
+          <div class="step-item">鉴别诊断</div>
+          <div class="step-item">ADHD分类诊断</div>
+          <div class="step-item">共病诊断</div>
+          <div class="step-item">诊断性访谈工具<div class="step-item-details">(必要时)</div></div>
         </div>
-      </section>
+      </div>
 
-      <section class="flow-step">
-        <div class="flow-dot"></div>
-        <div class="flow-card">
-          <div class="flow-step-index">STEP 5</div>
-          <h3 class="flow-title">综合判断后做出诊断，进入治疗与随访</h3>
-          <ul class="flow-listing">
-            <li>结合病史、症状、功能损害做综合判断</li>
-            <li>明确诊断后进入治疗、复诊与长期随访</li>
-          </ul>
+      <div class="step step-5">
+        <div class="step-header">综合治疗和随访监测</div>
+        <div class="step-content">
+          <div class="step-item">药物治疗</div>
+          <div class="step-item">非药物治疗</div>
+          <div class="step-item">随访和监测</div>
+          <div class="step-item">转诊<div class="step-item-details">(必要时)</div></div>
         </div>
-      </section>
+      </div>
     </div>
 
-    <div class="flow-note">诊断不是只看“像不像”，而是结合病史、症状、功能损害和排除过程做出的综合判断。</div>
+    <div class="flow-notes">注：ADHD为注意缺陷多动障碍；ICD-11为国际疾病分类第11版</div>
   </div>
 
   <script>
     function getContentHeight() {
-      const wrap = document.querySelector(".flow-wrap");
-      if (!wrap) {
+      const root = document.querySelector(".flow-container");
+      if (!root) {
         return 640;
       }
 
-      const styles = window.getComputedStyle(wrap);
+      const styles = window.getComputedStyle(root);
       const marginTop = parseFloat(styles.marginTop) || 0;
       const marginBottom = parseFloat(styles.marginBottom) || 0;
-      const rectHeight = wrap.getBoundingClientRect().height || 0;
-      return Math.ceil(Math.max(wrap.scrollHeight, wrap.offsetHeight, rectHeight) + marginTop + marginBottom);
+      const rectHeight = root.getBoundingClientRect().height || 0;
+      return Math.ceil(Math.max(root.scrollHeight, root.offsetHeight, rectHeight) + marginTop + marginBottom);
     }
 
     function syncParentHeight() {
@@ -273,9 +270,9 @@
 
     if ("ResizeObserver" in window) {
       const observer = new ResizeObserver(() => syncParentHeight());
-      const wrap = document.querySelector(".flow-wrap");
-      if (wrap) {
-        observer.observe(wrap);
+      const root = document.querySelector(".flow-container");
+      if (root) {
+        observer.observe(root);
       }
     }
   </script>
