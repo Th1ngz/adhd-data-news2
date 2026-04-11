@@ -813,26 +813,27 @@ function initHeroMotion() {
   const paperFrame = hero.querySelector(".hero-paper__frame");
   const ornaments = [...hero.querySelectorAll(".hero-paper__oval, .hero-paper__underline")];
   const subtitle = hero.querySelector(".hero-subtitle");
-  const lead = hero.querySelector(".hero-lead");
   const introParagraphs = [...hero.querySelectorAll(".hero-intro p")];
   const figure = hero.querySelector(".hero-figure__image");
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasGsap = typeof window.gsap !== "undefined";
 
-  if (!hasGsap || prefersReducedMotion || !paper || !figure || !subtitle || !lead || !introParagraphs.length) {
+  if (!hasGsap || prefersReducedMotion || !paper || !figure || !subtitle || !titleLines.length || !introParagraphs.length) {
     hero.classList.add("is-static");
     return;
   }
 
   const gsap = window.gsap;
+  const titleChars = splitHeroTitle();
+  const titleTargets = titleChars.length ? titleChars : titleLines;
   if (window.ScrollTrigger && typeof gsap.registerPlugin === "function") {
     gsap.registerPlugin(window.ScrollTrigger);
   }
 
   gsap.set(paper, { opacity: 0.9, y: 22, rotate: -1.4, scale: 0.986 });
-  gsap.set(titleLines, { opacity: 0, y: 18, rotate: 1.2, transformOrigin: "0% 100%" });
+  gsap.set(titleLines, { opacity: 1 });
+  gsap.set(titleTargets, { opacity: 0, y: 18, rotate: 1.2, transformOrigin: "50% 100%" });
   gsap.set(subtitle, { opacity: 0, y: 14 });
-  gsap.set(lead, { opacity: 0, y: 16 });
   gsap.set(introParagraphs, { opacity: 0, y: 18 });
   gsap.set(figure, { opacity: 0.58, x: 28, scale: 1.04, filter: "blur(4px)" });
   gsap.set(ornaments, { opacity: 0, scale: 0.92, transformOrigin: "50% 50%" });
@@ -849,18 +850,22 @@ function initHeroMotion() {
 
   timeline
     .to(figure, { opacity: 0.94, x: 0, scale: 1, filter: "blur(0px)", duration: 1.06 }, 0.02)
-    .to(paper, { opacity: 1, y: 0, rotate: 0, scale: 1, duration: 0.86 }, 0.12)
-    .to(paperFrame, { opacity: 0.1, duration: 0.7 }, 0.3)
-    .to(titleLines, { opacity: 1, y: 0, rotate: 0, duration: 0.58, stagger: 0.08, ease: "power3.out" }, 0.34)
+    .to(paper, { opacity: 1, y: 0, rotate: 0, scale: 1, duration: 0.86 }, 0.12);
+
+  if (paperFrame) {
+    timeline.to(paperFrame, { opacity: 0.1, duration: 0.7 }, 0.3);
+  }
+
+  timeline
+    .to(titleTargets, { opacity: 1, y: 0, rotate: 0, duration: 0.46, stagger: 0.035, ease: "power3.out" }, 0.34)
     .to(subtitle, { opacity: 1, y: 0, duration: 0.56 }, 0.82)
-    .to(lead, { opacity: 1, y: 0, duration: 0.5 }, 0.92)
     .to(ornaments, {
       opacity: (index) => (index === 0 ? 0.12 : 0.24),
       scale: 1,
       duration: 0.7,
       stagger: 0.1
     }, 0.9)
-    .to(introParagraphs, { opacity: 1, y: 0, duration: 0.62, stagger: 0.12 }, 1.06)
+    .to(introParagraphs, { opacity: 1, y: 0, duration: 0.62, stagger: 0.12 }, 0.98)
     .to(ornaments, {
       opacity: (index) => (index === 0 ? 0.12 : 0.24),
       duration: 0.01

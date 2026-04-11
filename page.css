@@ -2,9 +2,9 @@
   --bg: #f4f7fc;
   --bg-soft: #eef3fb;
   --bg-deep: #e6edf8;
-  --ink: #273854;
-  --ink-soft: #5b6b84;
-  --ink-faint: #8190a4;
+  --ink: #243550;
+  --ink-soft: #495a72;
+  --ink-faint: #6f8097;
   --line: rgba(108, 129, 164, 0.18);
   --line-strong: rgba(108, 129, 164, 0.32);
   --lavender: #e8d3ff;
@@ -144,10 +144,10 @@ main {
 }
 
 h2 {
-  font-size: clamp(1.92rem, 3.2vw, 2.72rem);
+  font-size: clamp(1.68rem, 2.7vw, 2.28rem);
   line-height: 1.22;
-  color: #2e405e;
-  margin-bottom: 20px;
+  color: #2a3c58;
+  margin-bottom: 18px;
   padding-left: 18px;
   position: relative;
   letter-spacing: 0.02em;
@@ -181,7 +181,7 @@ p {
 
 .block-lead {
   max-width: var(--text);
-  color: #314360;
+  color: #2f415e;
   font-size: 1.08rem;
   margin-bottom: 0.8rem;
 }
@@ -427,11 +427,13 @@ p {
   gap: 0;
   margin-bottom: 18px;
   font-size: clamp(3.1rem, 5.4vw, 5rem);
-  line-height: 0.9;
+  line-height: 0.94;
   color: #2b3d5b;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   max-width: none;
   text-wrap: nowrap;
+  font-family: "Microsoft YaHei", "PingFang SC", "Hiragino Sans GB", sans-serif;
+  font-weight: 700;
 }
 
 .hero-title__line {
@@ -444,7 +446,7 @@ p {
 }
 
 .hero-title__line + .hero-title__line {
-  margin-top: 0.04em;
+  margin-top: 0.06em;
 }
 
 .hero-title__char {
@@ -460,10 +462,12 @@ p {
 .hero-subtitle {
   position: relative;
   z-index: 2;
-  color: #41526e;
-  font-size: clamp(0.92rem, 1.04vw, 1.02rem);
-  line-height: 1.66;
-  margin-bottom: 14px;
+  color: #394d6a;
+  font-size: clamp(0.86rem, 0.92vw, 0.94rem);
+  line-height: 1.6;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  margin-bottom: 16px;
   max-width: none;
   white-space: nowrap;
 }
@@ -492,7 +496,7 @@ p {
 
 .hero-intro p {
   max-width: none;
-  color: #51627c;
+  color: #485972;
   font-size: clamp(0.88rem, 0.94vw, 0.95rem);
   line-height: 1.72;
   margin-bottom: 0;
@@ -643,7 +647,14 @@ p {
 }
 
 .story-step p {
-  color: #7c8a9f;
+  color: #6b7b94;
+}
+
+#search-entry .story-step > p:not(.step-kicker),
+#resonance .story-step > p:not(.step-kicker),
+#boundaries .story-step > p:not(.step-kicker) {
+  font-size: clamp(0.92rem, 0.98vw, 0.97rem);
+  line-height: 1.82;
 }
 
 .story-step .chart-takeaway {
@@ -674,6 +685,13 @@ p {
   letter-spacing: 0.16em;
   color: #7d8ca2;
   margin-bottom: 10px;
+}
+
+#search-entry .step-kicker,
+#resonance .step-kicker,
+#boundaries .step-kicker {
+  font-size: 0.72rem;
+  margin-bottom: 8px;
 }
 
 .chart-takeaway {
@@ -768,6 +786,28 @@ p {
   line-height: 1.6;
   color: #8794a8;
   max-width: 42rem;
+}
+
+.data-highlight {
+  padding: 0 0.14em 0.05em;
+  border-radius: 2px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 240, 110, 0.94) 40%,
+      rgba(255, 240, 110, 0.94) 86%,
+      rgba(226, 192, 255, 0.76) 86%,
+      rgba(226, 192, 255, 0.76) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0) 62%,
+      rgba(207, 173, 255, 0.28) 62%,
+      rgba(207, 173, 255, 0.28) 100%
+    );
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 .ribbon-chart {
@@ -1728,10 +1768,10 @@ p {
   padding-left: 18px;
   margin-bottom: 0;
   max-width: 15em;
-  font-size: clamp(1.82rem, 2.9vw, 2.46rem);
+  font-size: clamp(1.58rem, 2.4vw, 2.08rem);
   line-height: 1.34;
   letter-spacing: 0.015em;
-  color: #30435f;
+  color: #2d405d;
 }
 
 .bridge-lead::before {
@@ -1912,6 +1952,8 @@ p {
 #scale .frame-figure .chart-source {
   width: 100%;
   margin-top: 16px;
+  text-align: center;
+  margin-inline: auto;
 }
 
 .scale-note {
@@ -2184,29 +2226,73 @@ p {
 .medication-cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
+  gap: 22px;
   margin-top: 0;
   grid-auto-rows: 1fr;
 }
 
 .medication-card {
-  min-height: 210px;
-  padding: 22px 20px 18px;
-  border-radius: 24px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(248, 251, 255, 0.14));
-  box-shadow: inset 0 0 0 1px rgba(206, 219, 239, 0.72);
+  --note-bg: url("./素材/图标/横线便签1.png");
+  --med-icon: url("./素材/图标/药盒.png");
+  position: relative;
+  min-height: 248px;
+  padding: 26px 96px 22px 26px;
+  border-radius: 0;
+  overflow: visible;
+  isolation: isolate;
+  background: var(--note-bg) center / 100% 100% no-repeat;
+  box-shadow: none;
+}
+
+.medication-card::after {
+  content: "";
+  position: absolute;
+  top: 20px;
+  right: 22px;
+  width: 56px;
+  height: 56px;
+  background: var(--med-icon) center / contain no-repeat;
+  opacity: 0.82;
+  filter: saturate(0.96);
+  pointer-events: none;
+}
+
+.medication-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.medication-card--access {
+  --note-bg: url("./素材/图标/横线便签1.png");
+  --med-icon: url("./素材/图标/药盒.png");
+}
+
+.medication-card--control {
+  --note-bg: url("./素材/图标/横线便签2.png");
+  --med-icon: url("./素材/图标/药瓶蓝.png");
+}
+
+.medication-card--cost {
+  --note-bg: url("./素材/图标/横线便签3.png");
+  --med-icon: url("./素材/图标/药片1.png");
+}
+
+.medication-card--effect {
+  --note-bg: url("./素材/图标/横线便签4.png");
+  --med-icon: url("./素材/图标/药管.png");
 }
 
 .medication-card h3 {
-  color: #304260;
-  font-size: 1rem;
-  margin-bottom: 10px;
+  color: #2d4060;
+  font-size: 1.04rem;
+  line-height: 1.35;
+  margin-bottom: 12px;
 }
 
 .medication-card p {
-  color: #5b6b84;
-  font-size: 0.94rem;
-  line-height: 1.78;
+  color: #465871;
+  font-size: 0.95rem;
+  line-height: 1.8;
 }
 
 .medication-card p + p {
@@ -2214,7 +2300,7 @@ p {
 }
 
 .medication-accent {
-  color: #304260;
+  color: #293d5c;
   font-weight: 600;
 }
 
@@ -2299,7 +2385,7 @@ p {
 .footer p {
   max-width: none;
   font-size: 0.95rem;
-  color: #74829a;
+  color: #56677f;
 }
 
 .footer-lead {
