@@ -76,15 +76,15 @@ body::after {
 
 body.is-reality {
   background:
-    radial-gradient(circle at 18% 8%, rgba(232, 211, 255, 0.16), transparent 24%),
-    radial-gradient(circle at 82% 18%, rgba(222, 236, 255, 0.34), transparent 28%),
-    radial-gradient(circle at 50% 64%, rgba(230, 237, 248, 0.92), transparent 34%),
-    linear-gradient(180deg, var(--bg) 0%, #edf2fa 44%, #ebf0f8 100%);
+    radial-gradient(circle at 14% 10%, rgba(232, 211, 255, 0.22), transparent 26%),
+    radial-gradient(circle at 82% 18%, rgba(222, 236, 255, 0.42), transparent 30%),
+    radial-gradient(circle at 68% 68%, rgba(236, 241, 250, 0.82), transparent 30%),
+    linear-gradient(180deg, var(--bg) 0%, var(--bg-soft) 52%, var(--bg) 100%);
 }
 
 body.is-reality::after {
-  opacity: 0.28;
-  transform: translateY(0);
+  opacity: 0.18;
+  transform: translateY(-1%);
 }
 
 img {
@@ -103,6 +103,20 @@ a {
 
 main {
   position: relative;
+  isolation: isolate;
+}
+
+main::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.82;
+  background:
+    url("./素材/底色1.png") center top / 100% auto no-repeat,
+    url("./素材/底色2.png") center center / 100% auto repeat-y,
+    url("./素材/底色3.png") center bottom / 100% auto no-repeat;
 }
 
 .story-section {
@@ -173,6 +187,7 @@ p {
 .section-head p + p,
 .embed-heading p + p,
 .bridge-copy p + p,
+.closing-copy p + p,
 .hero-intro p + p,
 .story-step p + p,
 .footer p + p {
@@ -1848,6 +1863,7 @@ p {
 #medication .story-shell,
 #diagnosis .story-shell,
 #scale .story-shell,
+.closing-section .story-shell,
 .references-section .story-shell,
 .footer .story-shell {
   width: min(100%, var(--afterstory-shell));
@@ -1861,6 +1877,7 @@ p {
 #medication .embed-heading,
 #diagnosis .embed-heading,
 #scale .embed-heading,
+.closing-copy,
 .references-section .section-head,
 .references-list,
 .footer .story-shell > * {
@@ -1875,6 +1892,7 @@ p {
 #medication .embed-heading p,
 #diagnosis .embed-heading p,
 #scale .embed-heading p,
+.closing-copy p,
 .footer .story-shell p {
   max-width: none;
 }
@@ -2235,12 +2253,12 @@ p {
   --note-bg: url("./素材/图标/横线便签1.png");
   --med-icon: url("./素材/图标/药盒.png");
   position: relative;
-  min-height: 248px;
-  padding: 26px 96px 22px 26px;
+  min-height: 286px;
+  padding: 28px 92px 30px 30px;
   border-radius: 0;
   overflow: visible;
   isolation: isolate;
-  background: var(--note-bg) center / 100% 100% no-repeat;
+  background: var(--note-bg) center 52% / 114% 118% no-repeat;
   box-shadow: none;
 }
 

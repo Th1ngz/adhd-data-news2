@@ -872,7 +872,6 @@ function initHeroMotion() {
     }, 1.02);
 
   gsap.to(paper, { y: -5, rotate: -0.35, duration: 5.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
-  gsap.to(figure, { y: -10, x: -4, duration: 7.8, repeat: -1, yoyo: true, ease: "sine.inOut" });
 
   if (!window.ScrollTrigger) {
     return;
@@ -898,13 +897,6 @@ function initHeroMotion() {
     scrollTrigger: { ...scrollSettings }
   });
 
-  gsap.to(figure, {
-    yPercent: -10,
-    opacity: 0.84,
-    scale: 1.03,
-    ease: "none",
-    scrollTrigger: { ...scrollSettings }
-  });
 }
 
 function initRealityMode() {
