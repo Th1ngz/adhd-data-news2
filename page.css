@@ -2,9 +2,9 @@
   --bg: #f4f7fc;
   --bg-soft: #eef3fb;
   --bg-deep: #e6edf8;
-  --ink: #243550;
-  --ink-soft: #495a72;
-  --ink-faint: #6f8097;
+  --ink: #1f2f49;
+  --ink-soft: #3f5068;
+  --ink-faint: #63748d;
   --line: rgba(108, 129, 164, 0.18);
   --line-strong: rgba(108, 129, 164, 0.32);
   --lavender: #e8d3ff;
@@ -160,7 +160,7 @@ main::before {
 h2 {
   font-size: clamp(1.68rem, 2.7vw, 2.28rem);
   line-height: 1.22;
-  color: #2a3c58;
+  color: #22344f;
   margin-bottom: 18px;
   padding-left: 18px;
   position: relative;
@@ -196,7 +196,7 @@ p {
 
 .block-lead {
   max-width: var(--text);
-  color: #2f415e;
+  color: #273a57;
   font-size: 1.08rem;
   margin-bottom: 0.8rem;
 }
@@ -477,7 +477,7 @@ p {
 .hero-subtitle {
   position: relative;
   z-index: 2;
-  color: #394d6a;
+  color: #304461;
   font-size: clamp(0.86rem, 0.92vw, 0.94rem);
   line-height: 1.6;
   font-weight: 700;
@@ -511,7 +511,7 @@ p {
 
 .hero-intro p {
   max-width: none;
-  color: #485972;
+  color: #42546d;
   font-size: clamp(0.88rem, 0.94vw, 0.95rem);
   line-height: 1.72;
   margin-bottom: 0;
@@ -662,7 +662,7 @@ p {
 }
 
 .story-step p {
-  color: #6b7b94;
+  color: #5e708b;
 }
 
 #search-entry .story-step > p:not(.step-kicker),
@@ -691,14 +691,14 @@ p {
 }
 
 .story-step.is-active .chart-takeaway {
-  color: #324460;
+  color: #283b58;
 }
 
 .step-kicker,
 .panel-label {
   font-size: 0.78rem;
   letter-spacing: 0.16em;
-  color: #7d8ca2;
+  color: #667892;
   margin-bottom: 10px;
 }
 
@@ -799,7 +799,7 @@ p {
   margin-top: 8px;
   font-size: 0.82rem;
   line-height: 1.6;
-  color: #8794a8;
+  color: #72829a;
   max-width: 42rem;
 }
 
@@ -1756,9 +1756,12 @@ p {
   inset: 0;
   pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(244, 247, 252, 0) 0%, rgba(238, 243, 251, 0.82) 20%, rgba(236, 241, 250, 0.98) 100%),
-    radial-gradient(circle at 50% 16%, rgba(232, 211, 255, 0.24), transparent 34%),
-    radial-gradient(circle at 80% 32%, rgba(222, 236, 255, 0.26), transparent 30%);
+    linear-gradient(180deg, rgba(244, 247, 252, 0.12) 0%, rgba(244, 247, 252, 0.06) 18%, rgba(244, 247, 252, 0.12) 100%),
+    radial-gradient(circle at 50% 16%, rgba(232, 211, 255, 0.14), transparent 34%),
+    radial-gradient(circle at 80% 32%, rgba(222, 236, 255, 0.16), transparent 30%),
+    url("./素材/底色1.png") center top / 100% auto no-repeat,
+    url("./素材/底色2.png") center center / 100% auto repeat-y,
+    url("./素材/底色3.png") center bottom / 100% auto no-repeat;
 }
 
 .bridge-block {
@@ -1786,7 +1789,7 @@ p {
   font-size: clamp(1.58rem, 2.4vw, 2.08rem);
   line-height: 1.34;
   letter-spacing: 0.015em;
-  color: #2d405d;
+  color: #22344f;
 }
 
 .bridge-lead::before {
@@ -2301,14 +2304,14 @@ p {
 }
 
 .medication-card h3 {
-  color: #2d4060;
+  color: #243755;
   font-size: 1.04rem;
   line-height: 1.35;
   margin-bottom: 12px;
 }
 
 .medication-card p {
-  color: #465871;
+  color: #3f5169;
   font-size: 0.95rem;
   line-height: 1.8;
 }
@@ -2318,7 +2321,7 @@ p {
 }
 
 .medication-accent {
-  color: #293d5c;
+  color: #233652;
   font-weight: 600;
 }
 
@@ -2403,11 +2406,11 @@ p {
 .footer p {
   max-width: none;
   font-size: 0.95rem;
-  color: #56677f;
+  color: #455770;
 }
 
 .footer-lead {
-  color: #324460;
+  color: #253854;
   font-size: clamp(1.36rem, 2.4vw, 1.94rem);
   line-height: 1.72;
   margin-bottom: 1.3rem;
