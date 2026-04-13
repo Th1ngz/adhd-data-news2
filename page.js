@@ -818,7 +818,7 @@ function initHeroMotion() {
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const hasGsap = typeof window.gsap !== "undefined";
 
-  if (!hasGsap || prefersReducedMotion || !paper || !figure || !subtitle || !titleLines.length || !introParagraphs.length) {
+  if (!hasGsap || prefersReducedMotion || !paper || !figure || !subtitle || !titleLines.length) {
     hero.classList.add("is-static");
     return;
   }
@@ -834,7 +834,9 @@ function initHeroMotion() {
   gsap.set(titleLines, { opacity: 1 });
   gsap.set(titleTargets, { opacity: 0, y: 18, rotate: 1.2, transformOrigin: "50% 100%" });
   gsap.set(subtitle, { opacity: 0, y: 14 });
-  gsap.set(introParagraphs, { opacity: 0, y: 18 });
+  if (introParagraphs.length) {
+    gsap.set(introParagraphs, { opacity: 0, y: 18 });
+  }
   gsap.set(figure, { opacity: 0.58, x: 28, scale: 1.04, filter: "blur(4px)" });
   gsap.set(ornaments, { opacity: 0, scale: 0.92, transformOrigin: "50% 50%" });
 
@@ -864,9 +866,13 @@ function initHeroMotion() {
       scale: 1,
       duration: 0.7,
       stagger: 0.1
-    }, 0.9)
-    .to(introParagraphs, { opacity: 1, y: 0, duration: 0.62, stagger: 0.12 }, 0.98)
-    .to(ornaments, {
+    }, 0.9);
+
+  if (introParagraphs.length) {
+    timeline.to(introParagraphs, { opacity: 1, y: 0, duration: 0.62, stagger: 0.12 }, 0.98);
+  }
+
+  timeline.to(ornaments, {
       opacity: (index) => (index === 0 ? 0.12 : 0.24),
       duration: 0.01
     }, 1.02);
@@ -924,6 +930,133 @@ function initRealityMode() {
   update();
   window.addEventListener("scroll", requestUpdate, { passive: true });
   window.addEventListener("resize", requestUpdate);
+}
+
+function initPageNav() {
+  const nav = document.querySelector(".page-nav");
+  if (!nav) {
+    return;
+  }
+
+  const items = [...nav.querySelectorAll(".page-nav__link")]
+    .map((link) => {
+      const href = link.getAttribute("href");
+      if (!href || !href.startsWith("#")) {
+        return null;
+      }
+
+      const sectionIds = (link.dataset.sections || href.slice(1))
+        .split(",")
+        .map((id) => id.trim())
+        .filter(Boolean);
+      const targets = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+      if (!targets.length) {
+        return null;
+      }
+
+      return { link, targets, firstTarget: targets[0] };
+    })
+    .filter(Boolean);
+
+  if (!items.length) {
+    return;
+  }
+
+  const hero = document.getElementById("hero");
+  const firstContent = document.getElementById("search-entry");
+  const desktopQuery = window.matchMedia("(min-width: 1320px)");
+  const sectionStates = items.flatMap((item) => item.targets.map((target) => ({ item, target })));
+  let ticking = false;
+
+  const setActiveLink = (activeItem) => {
+    items.forEach((item) => {
+      const isActive = item === activeItem;
+      item.link.classList.toggle("is-active", isActive);
+      if (isActive) {
+        item.link.setAttribute("aria-current", "location");
+      } else {
+        item.link.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  const update = () => {
+    ticking = false;
+
+    if (!desktopQuery.matches) {
+      document.body.classList.remove("is-nav-visible");
+      items.forEach((item) => {
+        item.link.classList.remove("is-active");
+        item.link.removeAttribute("aria-current");
+      });
+      return;
+    }
+
+    const showNav = firstContent
+      ? firstContent.getBoundingClientRect().top <= window.innerHeight * 0.58
+      : window.scrollY > window.innerHeight * 0.3;
+    document.body.classList.toggle("is-nav-visible", showNav);
+
+    const marker = window.innerHeight * 0.35;
+    let activeItem = items[0];
+
+    for (const state of sectionStates) {
+      const rect = state.target.getBoundingClientRect();
+      if (rect.top <= marker) {
+        activeItem = state.item;
+      }
+
+      if (rect.top <= marker && rect.bottom >= marker) {
+        activeItem = state.item;
+        break;
+      }
+    }
+
+    setActiveLink(activeItem);
+
+    if (hero) {
+      const heroRect = hero.getBoundingClientRect();
+      if (heroRect.top >= -8 && heroRect.bottom > window.innerHeight * 0.45) {
+        document.body.classList.remove("is-nav-visible");
+      }
+    }
+  };
+
+  const requestUpdate = () => {
+    if (ticking) {
+      return;
+    }
+    ticking = true;
+    window.requestAnimationFrame(update);
+  };
+
+  items.forEach((item) => {
+    item.link.addEventListener("click", () => {
+      if (item.firstTarget === hero) {
+        document.body.classList.remove("is-nav-visible");
+      }
+      window.requestAnimationFrame(requestUpdate);
+      window.setTimeout(requestUpdate, 360);
+    });
+  });
+
+  update();
+  window.addEventListener("scroll", requestUpdate, { passive: true });
+  window.addEventListener("resize", requestUpdate);
+  window.addEventListener("hashchange", requestUpdate);
+
+  if (typeof desktopQuery.addEventListener === "function") {
+    desktopQuery.addEventListener("change", requestUpdate);
+  } else if (typeof desktopQuery.addListener === "function") {
+    desktopQuery.addListener(requestUpdate);
+  }
+
+  window.setTimeout(requestUpdate, 360);
+  window.setTimeout(requestUpdate, 1260);
+  window.setTimeout(requestUpdate, 2660);
 }
 
 function restoreHashTarget() {
@@ -1136,6 +1269,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollyStories();
   initHeroMotion();
   initRealityMode();
+  initPageNav();
   initScaleModule();
   restoreHashTarget();
 });
