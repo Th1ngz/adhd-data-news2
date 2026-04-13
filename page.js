@@ -938,28 +938,40 @@ function initPageNav() {
     return;
   }
 
-  const items = [...nav.querySelectorAll(".page-nav__link")]
-    .map((link) => {
-      const href = link.getAttribute("href");
-      if (!href || !href.startsWith("#")) {
+  const groups = [...nav.querySelectorAll(".page-nav__group")]
+    .map((group) => {
+      const title = group.querySelector(".page-nav__group-title");
+      const items = [...group.querySelectorAll(".page-nav__link")]
+        .map((link) => {
+          const href = link.getAttribute("href");
+          if (!href || !href.startsWith("#")) {
+            return null;
+          }
+
+          const sectionIds = (link.dataset.sections || href.slice(1))
+            .split(",")
+            .map((id) => id.trim())
+            .filter(Boolean);
+          const targets = sectionIds
+            .map((id) => document.getElementById(id))
+            .filter(Boolean);
+
+          if (!targets.length) {
+            return null;
+          }
+
+          return { link, targets, firstTarget: targets[0], group, title };
+        })
+        .filter(Boolean);
+
+      if (!items.length) {
         return null;
       }
 
-      const sectionIds = (link.dataset.sections || href.slice(1))
-        .split(",")
-        .map((id) => id.trim())
-        .filter(Boolean);
-      const targets = sectionIds
-        .map((id) => document.getElementById(id))
-        .filter(Boolean);
-
-      if (!targets.length) {
-        return null;
-      }
-
-      return { link, targets, firstTarget: targets[0] };
+      return { group, title, items };
     })
     .filter(Boolean);
+  const items = groups.flatMap((group) => group.items);
 
   if (!items.length) {
     return;
@@ -972,6 +984,14 @@ function initPageNav() {
   let ticking = false;
 
   const setActiveLink = (activeItem) => {
+    groups.forEach((group) => {
+      const isGroupActive = group.items.includes(activeItem);
+      group.group.classList.toggle("is-group-active", isGroupActive);
+      if (group.title) {
+        group.title.classList.toggle("is-active", isGroupActive);
+      }
+    });
+
     items.forEach((item) => {
       const isActive = item === activeItem;
       item.link.classList.toggle("is-active", isActive);
@@ -988,6 +1008,12 @@ function initPageNav() {
 
     if (!desktopQuery.matches) {
       document.body.classList.remove("is-nav-visible");
+      groups.forEach((group) => {
+        group.group.classList.remove("is-group-active");
+        if (group.title) {
+          group.title.classList.remove("is-active");
+        }
+      });
       items.forEach((item) => {
         item.link.classList.remove("is-active");
         item.link.removeAttribute("aria-current");

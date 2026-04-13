@@ -19,7 +19,7 @@
   --afterstory-text: 800px;
   --afterstory-figure: 1030px;
   --afterstory-gap: clamp(30px, 4vw, 54px);
-  --page-nav-width: 84px;
+  --page-nav-width: 176px;
   --page-nav-gap: clamp(12px, 1.6vw, 18px);
   --page-nav-anchor-offset: 24px;
   --radius-xl: 34px;
@@ -112,7 +112,7 @@ a {
   z-index: 8;
   width: var(--page-nav-width);
   max-height: calc(100svh - 110px);
-  padding: 6px 0 6px 12px;
+  padding: 6px 0 6px 8px;
   opacity: 0;
   transform: translate3d(-8px, -50%, 0);
   pointer-events: none;
@@ -124,14 +124,14 @@ a {
 .page-nav__inner {
   position: relative;
   display: grid;
-  gap: 10px;
+  gap: 14px;
   max-height: calc(100svh - 122px);
 }
 
 .page-nav__inner::before {
   content: "";
   position: absolute;
-  left: 0;
+  left: 26px;
   top: 24px;
   bottom: 10px;
   width: 1px;
@@ -143,21 +143,56 @@ a {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(88, 108, 136, 0.52);
-  padding-left: 9px;
+  padding-left: 39px;
 }
 
 .page-nav__list {
   list-style: none;
   display: grid;
-  gap: 9px;
+  gap: 34px;
   overflow-y: auto;
-  padding: 2px 0 2px 9px;
+  padding: 2px 0 2px 0;
   scrollbar-width: none;
 }
 
 .page-nav__list::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+
+.page-nav__group {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr);
+  column-gap: 18px;
+  align-items: start;
+}
+
+.page-nav__group-title {
+  min-width: 0;
+  grid-column: 1;
+  padding-left: 0;
+  font-size: 0.76rem;
+  line-height: 1.04;
+  letter-spacing: 0;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  justify-self: center;
+  color: rgba(90, 111, 139, 0.38);
+  transition: color 0.24s ease;
+}
+
+.page-nav__group.is-group-active .page-nav__group-title,
+.page-nav__group-title.is-active {
+  color: rgba(62, 84, 114, 0.7);
+}
+
+.page-nav__sublist {
+  list-style: none;
+  display: grid;
+  grid-column: 2;
+  gap: 18px;
+  padding-left: 0;
 }
 
 .page-nav__item {
@@ -168,10 +203,11 @@ a {
   position: relative;
   display: block;
   min-width: 0;
-  padding-left: 11px;
+  padding-left: 9px;
   color: rgba(74, 93, 120, 0.56);
   font-size: 0.77rem;
-  line-height: 1.34;
+  line-height: 1.22;
+  white-space: nowrap;
   text-decoration: none;
   transition:
     color 0.25s ease,
@@ -182,9 +218,9 @@ a {
 .page-nav__link::before {
   content: "";
   position: absolute;
-  left: -9px;
+  left: -17px;
   top: 50%;
-  width: 6px;
+  width: 8px;
   height: 1px;
   border-radius: 999px;
   background: rgba(146, 165, 194, 0.66);
@@ -211,7 +247,7 @@ a {
 
 .page-nav__link.is-active::before,
 .page-nav__link[aria-current="location"]::before {
-  width: 14px;
+  width: 16px;
   height: 2px;
   background: linear-gradient(180deg, rgba(207, 180, 244, 0.98), rgba(168, 200, 241, 0.98));
 }
@@ -1913,8 +1949,8 @@ p {
 }
 
 .bridge-block--center {
-  justify-items: center;
-  text-align: center;
+  justify-items: stretch;
+  text-align: left;
 }
 
 .bridge-block--center::before {
@@ -1927,11 +1963,12 @@ p {
 .bridge-lead {
   padding-left: 18px;
   margin-bottom: 0;
-  max-width: 15em;
+  max-width: none;
   font-size: clamp(1.58rem, 2.4vw, 2.08rem);
   line-height: 1.34;
   letter-spacing: 0.015em;
   color: #22344f;
+  white-space: nowrap;
 }
 
 .bridge-lead::before {
@@ -1939,9 +1976,9 @@ p {
 }
 
 .bridge-block--center .bridge-lead {
-  padding-left: 0;
-  margin-inline: auto;
-  text-align: center;
+  padding-left: 18px;
+  margin-inline: 0;
+  text-align: left;
 }
 
 .bridge-copy {
@@ -1956,16 +1993,17 @@ p {
 }
 
 .bridge-block--center .bridge-copy {
-  justify-items: center;
+  justify-items: stretch;
 }
 
 .bridge-block--center .bridge-copy > div {
   width: min(100%, 54rem);
+  margin-inline: auto;
 }
 
 .bridge-block--center .bridge-copy p {
-  text-align: center;
-  margin-inline: auto;
+  text-align: left;
+  margin-inline: 0;
 }
 
 .intro-bridge-block {
@@ -2667,6 +2705,11 @@ p {
 
   .scrolly-story {
     gap: 34px;
+  }
+
+  .bridge-lead {
+    max-width: 15em;
+    white-space: normal;
   }
 }
 
