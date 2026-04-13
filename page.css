@@ -651,22 +651,8 @@ p {
   padding-top: clamp(56px, 7vw, 82px);
 }
 
-.intro-lead-copy {
-  width: min(100%, var(--frame));
-  margin-inline: auto;
-}
-
-.intro-lead-copy p {
-  max-width: var(--text);
-}
-
-.intro-lead-copy p:first-child {
-  color: #2f425d;
-  font-size: clamp(1.04rem, 1.26vw, 1.14rem);
-}
-
-.intro-lead-copy p + p {
-  margin-top: 1rem;
+.intro-lead-section .story-shell {
+  width: min(100%, var(--afterstory-shell));
 }
 
 .hero-figure::before {
@@ -1926,6 +1912,18 @@ p {
   background: linear-gradient(90deg, rgba(113, 131, 161, 0.34), transparent);
 }
 
+.bridge-block--center {
+  justify-items: center;
+  text-align: center;
+}
+
+.bridge-block--center::before {
+  left: 50%;
+  width: min(260px, 46vw);
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(113, 131, 161, 0.34) 20%, rgba(113, 131, 161, 0.34) 80%, transparent);
+}
+
 .bridge-lead {
   padding-left: 18px;
   margin-bottom: 0;
@@ -1940,6 +1938,12 @@ p {
   content: "";
 }
 
+.bridge-block--center .bridge-lead {
+  padding-left: 0;
+  margin-inline: auto;
+  text-align: center;
+}
+
 .bridge-copy {
   display: grid;
   grid-template-columns: 1fr;
@@ -1949,6 +1953,31 @@ p {
 
 .bridge-copy p {
   max-width: none;
+}
+
+.bridge-block--center .bridge-copy {
+  justify-items: center;
+}
+
+.bridge-block--center .bridge-copy > div {
+  width: min(100%, 54rem);
+}
+
+.bridge-block--center .bridge-copy p {
+  text-align: center;
+  margin-inline: auto;
+}
+
+.intro-bridge-block {
+  gap: clamp(20px, 3vw, 28px);
+}
+
+.bridge-followup {
+  width: 100%;
+  display: grid;
+  gap: 0;
+  margin-top: clamp(40px, 5.4vw, 58px);
+  scroll-margin-top: var(--page-nav-anchor-offset);
 }
 
 .reality-section {
@@ -2003,16 +2032,15 @@ p {
 }
 
 #reality-bridge .story-shell,
-#types .story-shell,
 #voices .story-shell,
 #help .story-shell,
 #hospitals .story-shell,
 #medication .story-shell,
 #diagnosis .story-shell,
-#scale .story-shell,
-.closing-section .story-shell,
-.references-section .story-shell,
-.footer .story-shell {
+  #scale .story-shell,
+  .closing-section .story-shell,
+  .references-section .story-shell,
+  .footer .story-shell {
   width: min(100%, var(--afterstory-shell));
 }
 
@@ -2073,8 +2101,12 @@ p {
 #help .frame-figure::before,
 #hospitals .frame-figure::before,
 #diagnosis .frame-figure::before,
-#scale .frame-figure::before {
+  #scale .frame-figure::before {
   content: none;
+}
+
+#reality-bridge .bridge-followup .embed-heading {
+  margin-bottom: clamp(24px, 3.2vw, 34px);
 }
 
 #comorbidity .story-shell {
